@@ -39,35 +39,47 @@ NS_ASSUME_NONNULL_BEGIN
 `classify` int(4)  '电动车为1，巡逻车为0',
  */
 @interface NLHomeCarModel : NSObject
-@property(nonatomic,copy)NSDate *getFacDate;
-@property(nonatomic,copy)NSDate *buyDate;
-@property(nonatomic,copy)NSDate *installDate;
-
-@property(nonatomic,assign)int id;
-@property(nonatomic,assign)double buyPrice;
-@property(nonatomic,assign)int sysManagerId;
-@property(nonatomic,assign)int classify;
-
-@property(nonatomic,copy)NSString *machineNo;
-@property(nonatomic,copy)NSString *VIN;
-@property(nonatomic,copy)NSString *buyAdd;
-@property(nonatomic,copy)NSString *picPath;
-@property(nonatomic,copy)NSString *remark;
-@property(nonatomic,copy)NSString *uname;
-@property(nonatomic,copy)NSString *phone;
-@property(nonatomic,copy)NSString *IDCardNo;
-@property(nonatomic,copy)NSString *licenseNum;
-@property(nonatomic,copy)NSString *type;
-@property(nonatomic,copy)NSString *colour;
+//@property(nonatomic,copy)NSString *getfacdate;
+//@property(nonatomic,copy)NSString *buydate;
+//@property(nonatomic,copy)NSString *installdate;
+//
+//@property(nonatomic,assign)double buyprice;
+//@property(nonatomic,assign)int sysmanagerid;
+//@property(nonatomic,assign)int classify;
+//@property(nonatomic,assign)int flag;
+//
+//@property(nonatomic,copy)NSString *userid;
+@property(nonatomic,copy)NSString *id;
+//@property(nonatomic,copy)NSString *uid;
+//@property(nonatomic,copy)NSString *endTime;
+//@property(nonatomic,copy)NSString *startTime;
+//@property(nonatomic,copy)NSString *transfertime;
+//@property(nonatomic,copy)NSString *transferuserphone;
+//@property(nonatomic,copy)NSString *department;
+//@property(nonatomic,copy)NSString *machineno;
+//@property(nonatomic,copy)NSString *vin;
+//@property(nonatomic,copy)NSString *buyadd;
+@property(nonatomic,copy)NSString *picpath;
+//@property(nonatomic,copy)NSString *mark;
+//@property(nonatomic,copy)NSString *remark;
+//@property(nonatomic,copy)NSString *uname;
+//@property(nonatomic,copy)NSString *sname;
+//@property(nonatomic,copy)NSString *phone;
+//@property(nonatomic,copy)NSString *idcardno;
+@property(nonatomic,copy)NSString *licensenum;
+//@property(nonatomic,copy)NSString *facilityId;
+@property(nonatomic,copy)NSString *color;
 @property(nonatomic,copy)NSString *brand;
-@property(nonatomic,copy)NSString *homeTele;
-@property(nonatomic,copy)NSString *IDAdd;
-@property(nonatomic,copy)NSString *homeAdd;
-@property(nonatomic,copy)NSString *facNum;
-@property(nonatomic,copy)NSString *areaCode;
-@property(nonatomic,copy)NSString *facType;
-@property(nonatomic,copy)NSString *facPower;
+//@property(nonatomic,copy)NSString *homeTele;
+//@property(nonatomic,copy)NSString *IDAdd;
+//@property(nonatomic,copy)NSString *homeAdd;
+//@property(nonatomic,copy)NSString *facnum;
+//@property(nonatomic,copy)NSString *areacode;
+//@property(nonatomic,copy)NSString *areaid;
+//@property(nonatomic,copy)NSString *factype;
+//@property(nonatomic,copy)NSString *facpower;
 @property(nonatomic,copy)NSString *state;
+//@property(nonatomic,copy)NSString *type;
 @end
 
 NS_ASSUME_NONNULL_END

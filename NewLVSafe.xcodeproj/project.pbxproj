@@ -97,7 +97,7 @@
 		2DCC19B821AFDEA800B5FC92 /* NLFindCarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19B521AFDEA800B5FC92 /* NLFindCarModel.m */; };
 		2DCC19BF21AFDEB900B5FC92 /* NLHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19B921AFDEB900B5FC92 /* NLHomeViewController.m */; };
 		2DCC19C021AFDEB900B5FC92 /* NLFindCarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19BB21AFDEB900B5FC92 /* NLFindCarViewController.m */; };
-		2DCC19C121AFDEB900B5FC92 /* NLMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.m */; };
+		2DCC19C121AFDEB900B5FC92 /* NLMapViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.mm */; };
 		2DCC19CE21AFDEC700B5FC92 /* NLCarLocationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19C221AFDEC700B5FC92 /* NLCarLocationTableViewCell.m */; };
 		2DCC19CF21AFDEC700B5FC92 /* NLHomeCarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2DCC19C321AFDEC700B5FC92 /* NLHomeCarTableViewCell.xib */; };
 		2DCC19D021AFDEC700B5FC92 /* NLHomeNoLoginTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19C421AFDEC700B5FC92 /* NLHomeNoLoginTableViewCell.m */; };
@@ -236,6 +236,7 @@
 		2D20A92E2194215A00A4E110 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2D20A9302194216800A4E110 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		2D20A9322194216E00A4E110 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		2D59CB3221B6658B000659B2 /* NewLVSafe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewLVSafe.entitlements; sourceTree = "<group>"; };
 		2D70C80F21B0E048001657B2 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		2D70C81121B0EB3B001657B2 /* CarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarCollectionViewCell.h; sourceTree = "<group>"; };
 		2D70C81221B0EB3B001657B2 /* CarCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CarCollectionViewCell.m; sourceTree = "<group>"; };
@@ -268,7 +269,7 @@
 		2DCC19B921AFDEB900B5FC92 /* NLHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NLHomeViewController.m; sourceTree = "<group>"; };
 		2DCC19BA21AFDEB900B5FC92 /* NLMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NLMapViewController.h; sourceTree = "<group>"; };
 		2DCC19BB21AFDEB900B5FC92 /* NLFindCarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NLFindCarViewController.m; sourceTree = "<group>"; };
-		2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NLMapViewController.m; sourceTree = "<group>"; };
+		2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NLMapViewController.mm; sourceTree = "<group>"; };
 		2DCC19BD21AFDEB900B5FC92 /* NLFindCarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NLFindCarViewController.h; sourceTree = "<group>"; };
 		2DCC19BE21AFDEB900B5FC92 /* NLHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NLHomeViewController.h; sourceTree = "<group>"; };
 		2DCC19C221AFDEC700B5FC92 /* NLCarLocationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NLCarLocationTableViewCell.m; sourceTree = "<group>"; };
@@ -415,6 +416,7 @@
 		2D20A80621941E4C00A4E110 /* NewLVSafe */ = {
 			isa = PBXGroup;
 			children = (
+				2D59CB3221B6658B000659B2 /* NewLVSafe.entitlements */,
 				2D20A8592194200600A4E110 /* Home */,
 				2D20A8C22194201200A4E110 /* Login */,
 				2D20A83A2194200500A4E110 /* Mine */,
@@ -530,7 +532,7 @@
 				2DCC19BE21AFDEB900B5FC92 /* NLHomeViewController.h */,
 				2DCC19B921AFDEB900B5FC92 /* NLHomeViewController.m */,
 				2DCC19BA21AFDEB900B5FC92 /* NLMapViewController.h */,
-				2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.m */,
+				2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.mm */,
 				2D20A8662194200600A4E110 /* BMKWalkNaviViewController.mm */,
 				2D20A8682194200600A4E110 /* BMKWalkNaviViewController.h */,
 				2DC7CCFB21B4C014000EC865 /* NLCallPoliceViewController.h */,
@@ -799,6 +801,14 @@
 				TargetAttributes = {
 					2D20A80321941E4C00A4E110 = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					2D20A81B21941E6000A4E110 = {
 						CreatedOnToolsVersion = 10.1;
@@ -978,7 +988,7 @@
 				2D70C81C21B121DF001657B2 /* UserInfoViewController.m in Sources */,
 				2D20A81721941E5F00A4E110 /* main.m in Sources */,
 				2DCC19DA21AFDED900B5FC92 /* NLLoginViewController.m in Sources */,
-				2DCC19C121AFDEB900B5FC92 /* NLMapViewController.m in Sources */,
+				2DCC19C121AFDEB900B5FC92 /* NLMapViewController.mm in Sources */,
 				2DCC19F121AFDEF200B5FC92 /* NLChangeInfoViewController.m in Sources */,
 				2D20A8FA2194201200A4E110 /* FMResultSet.m in Sources */,
 				2DCC19D021AFDEC700B5FC92 /* NLHomeNoLoginTableViewCell.m in Sources */,
@@ -1174,6 +1184,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = NewLVSafe/NewLVSafe.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Y4CV8HZ5T;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1203,6 +1214,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = NewLVSafe/NewLVSafe.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Y4CV8HZ5T;
 				FRAMEWORK_SEARCH_PATHS = (

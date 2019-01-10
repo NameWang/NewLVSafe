@@ -25,7 +25,7 @@
  * 屏幕适配--iPhoneX全系
  */
 #define kiPhoneXAll ([UIScreen mainScreen].bounds.size.height == 812 || [UIScreen mainScreen].bounds.size.height == 896)
-
+#define kScale ([UIScreen mainScreen].bounds.size.height > 600?1.5:1)
 /**
  * iPhoneX全系导航栏增加高度 (64->88)
  */
@@ -46,19 +46,32 @@
 #import "DBManager.h"
 #import "UIButton+custom.h"
 #import "UILabel+normal.h"
+#import "YYModel.h"
 
-#define url_header @"192.168.124.32:8089"
-#define kGetMyCarListURL [NSString stringWithFormat:@"http://%@/searchshops",url_header]
-#define kGetFindingCarURL @""
-#define kGetFoundCarURL @""
-#define kIntroduceURL @""
-#define kInstallURL @""
-#define kLoginURL @""
-#define kChangeUserInfoURL @""
-#define kRegistURL @""
-#define kChangePWDURL @""
-#define kLockAUnlockCarURL @""
-#define kGetCarTrailURl @""
+//http://47.94.228.184:1443/productimg/tupian01.png
+//192.168.124.8:8181
+#define url_header @"http://47.94.228.184:1443/electrocarmanage/"
+#define iconimg_header @"http://47.94.228.184:2443/headimgurl/"
+#define carimg_header @"http://47.94.228.184:2443/img/"
+#define kGetMyCarListURL [NSString stringWithFormat:@"%@electrocar/applist",url_header]
+#define kGetFindingCarURL [NSString stringWithFormat:@"%@",url_header]
+#define kGetFoundCarURL [NSString stringWithFormat:@"%@",url_header]
+#define kIntroduceURL [NSString stringWithFormat:@"%@",url_header]
+#define kInstallURL [NSString stringWithFormat:@"%@",url_header]
+#define kLoginURL [NSString stringWithFormat:@"%@sysmanager/applogin",url_header]
+#define kChangeUserInfoURL [NSString stringWithFormat:@"%@sysmanager/appsave",url_header]
+#define kRegistURL [NSString stringWithFormat:@"%@",url_header]
+#define kChangePWDURL [NSString stringWithFormat:@"%@sysmanager/pwd",url_header]
+#define kLockAUnlockCarURL [NSString stringWithFormat:@"%@electrocar/state",url_header]
+#define kGetCarTrailURl [NSString stringWithFormat:@"%@drivering/appdrivringrecord",url_header]
+#define kUploadICONURl [NSString stringWithFormat:@"%@sysmanager/headimg",url_header]
+#define kGetPushMessageURL [NSString stringWithFormat:@"%@message/list",url_header]
+#define kDelPushMessageURL [NSString stringWithFormat:@"%@message/dels",url_header]
+#define kCallpoliceURL [NSString stringWithFormat:@"%@callpolice/iossave",url_header]
+#define kCancelpoliceURL [NSString stringWithFormat:@"%@callpolice/cancel",url_header]
+#define kGetCodeURL [NSString stringWithFormat:@"%@sysmanager/code",url_header]
+#define kFindPWDURL [NSString stringWithFormat:@"%@sysmanager/findpwd",url_header]
+#define kQuitURL [NSString stringWithFormat:@"%@sysmanager/loginout",url_header]
 
 
 #endif /* peoplesafe_Prefix_pch */

@@ -39,7 +39,11 @@
     self.view.backgroundColor=kBGWhiteColor;
     [self addLeftItemWithImageName:@"leftbackicon_white_titlebar_24x24_@2x"];
     dataSource=[NSMutableArray arrayWithObjects:@"手机号",@"身份证",@"姓名",@"签名",@"家庭住址",@"家庭电话",@"修改密码", nil];
-   
+    isLogin=[[[NSUserDefaults standardUserDefaults] objectForKey:@"isLogin"] boolValue];
+    if (isLogin) {
+        userInfo=[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"];
+        titleAry=[NSMutableArray arrayWithObjects:userInfo[@"phone"],userInfo[@"idcardno"],userInfo[@"sname"], nil];
+    }
     
     [self initTableView] ;
     
@@ -74,6 +78,9 @@
     cell=nocell;
     
     return cell;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 44*kScale;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NLChangeInfoViewController *change=[[NLChangeInfoViewController alloc] init];

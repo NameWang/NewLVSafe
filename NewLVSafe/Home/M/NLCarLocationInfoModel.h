@@ -38,30 +38,28 @@ NS_ASSUME_NONNULL_BEGIN
 //`installState` varchar(6)  '安装状态',
 //`border` int(2)  '边界为1非边界为0',
 @interface NLCarLocationInfoModel : NSObject
-@property(nonatomic,copy)NSDate *recordTime;
-@property(nonatomic,copy)NSDate *installDate;
-
-@property(nonatomic,assign)int id;
-@property(nonatomic,assign)int border;
-@property(nonatomic,assign)int installId;
-@property(nonatomic,assign)int managerId;
-
-@property(nonatomic,copy)NSString *facNum;
+@property(nonatomic,copy)NSString *recordtime;
+//@property(nonatomic,copy)NSString *installdate;
+//
+//@property(nonatomic,assign)int border;
+//
+//@property(nonatomic,copy)NSString *phone;
 @property(nonatomic,copy)NSString *province;
 @property(nonatomic,copy)NSString *city;
-@property(nonatomic,copy)NSString *prefecture;
 @property(nonatomic,copy)NSString *town;
-@property(nonatomic,copy)NSString *add;
 @property(nonatomic,copy)NSString *longitude;
 @property(nonatomic,copy)NSString *latitude;
-@property(nonatomic,copy)NSString *SDNum;
-@property(nonatomic,copy)NSString *areaCode;
-@property(nonatomic,copy)NSString *hardWareId;
-@property(nonatomic,copy)NSString *SDState;
-@property(nonatomic,copy)NSString *installState;
-@property(nonatomic,copy)NSString *workPattern;
-@property(nonatomic,copy)NSString *skyNetAdd1;
-@property(nonatomic,copy)NSString *skyNetAdd2;
+//@property(nonatomic,copy)NSString *sdnum;
+//@property(nonatomic,copy)NSString *areacode;
+//@property(nonatomic,copy)NSString *sdstate;
+//@property(nonatomic,copy)NSString *installstate;
+//@property(nonatomic,copy)NSString *picpath;
+//
+//@property(nonatomic,copy)NSString *uname;
+@property(nonatomic,copy)NSString *addr;
+//@property(nonatomic,copy)NSString *areaid;
+@property(nonatomic,copy)NSString *prefecture;
+//@property(nonatomic,copy)NSString *licensenum;
 @end
 
 NS_ASSUME_NONNULL_END

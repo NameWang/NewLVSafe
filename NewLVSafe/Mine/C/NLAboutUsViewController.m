@@ -26,32 +26,33 @@
     UILabel *versionLabel=[[UILabel alloc] initWithFrame:CGRectMake(50, CGRectGetMaxY(logoImgView.frame)+50, kScreenWidth-100, 20)];
     versionLabel.textColor=[UIColor grayColor];
     versionLabel.textAlignment=NSTextAlignmentCenter;
-    versionLabel.font=[UIFont systemFontOfSize:11];
+    versionLabel.font=[UIFont systemFontOfSize:11*kScale];
     versionLabel.text=@"版本号：V1.0.0";
     [self.view addSubview:versionLabel];
-    AvtionImageView *contactView=[[AvtionImageView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(versionLabel.frame)+40, kScreenWidth, 30)];
+    AvtionImageView *contactView=[[AvtionImageView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(versionLabel.frame)+40, kScreenWidth, 30*kScale)];
     contactView.backgroundColor=[UIColor whiteColor];
     [contactView addTarget:self action:@selector(contactUS)];
     [self.view addSubview:contactView];
-    UILabel *titLabel=[[UILabel alloc] initWithFrame:CGRectMake(15, 2, 80, 26)];
+    UILabel *titLabel=[[UILabel alloc] initWithFrame:CGRectMake(15, 2, 80*kScale, 26*kScale)];
     titLabel.text=@"联系客服";
+    titLabel.font=[UIFont systemFontOfSize:15*kScale];
     titLabel.userInteractionEnabled=YES;
     [contactView addSubview:titLabel];
-    UILabel *numLabel=[[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth-135, 2, 120, 26)];
-    numLabel.text=@"0371-666666";
+    UILabel *numLabel=[[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth-120*kScale-15, 2, 120*kScale, 26*kScale)];
+    numLabel.text=@"13393732159";
     numLabel.textAlignment=NSTextAlignmentRight;
     numLabel.textColor=[UIColor grayColor];
-    numLabel.font=[UIFont systemFontOfSize:13];
+    numLabel.font=[UIFont systemFontOfSize:13*kScale];
     numLabel.userInteractionEnabled=YES;
     [contactView addSubview:numLabel];
-    UILabel *copyRight=[[UILabel alloc] initWithFrame:CGRectMake(0, kScreenHeight-30-kiPhoneX_Bottom_Height-64, kScreenWidth, 20)];
+    UILabel *copyRight=[[UILabel alloc] initWithFrame:CGRectMake(0, kScreenHeight-30*kScale-kiPhoneX_Bottom_Height-64, kScreenWidth, 20*kScale)];
     copyRight.textAlignment=NSTextAlignmentCenter;
-    copyRight.font=[UIFont systemFontOfSize:12];
+    copyRight.font=[UIFont systemFontOfSize:12*kScale];
     copyRight.text=@"乐沃实业©www.lovai.com";
     [self.view addSubview:copyRight];
 }
 -(void)contactUS{
-    NSMutableString *str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",@"0371-666666"];
+    NSMutableString *str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",@"13393732159"];
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:str]]) {
           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
     }

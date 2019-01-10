@@ -7,7 +7,7 @@
 //
 
 #import "NLChangePWDViewController.h"
-
+#import "NLLoginViewController.h"
 @interface NLChangePWDViewController ()<UITextFieldDelegate>
 {
     NSString *messTitle;
@@ -16,7 +16,7 @@
     UITextField *passField,*confirmField;
     UIButton *loginBtn;
     AFHTTPSessionManager *manager;
-
+  NSDictionary *userInfo;
     UIActivityIndicatorView *active;
 }
 
@@ -32,7 +32,7 @@
     [self addLeftItemWithImageName:@"leftbackicon_white_titlebar_24x24_@2x"];
     manager=[AFHTTPSessionManager manager];
     manager.responseSerializer=[AFHTTPResponseSerializer serializer];
-   
+      userInfo=[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"];
      numField=[[UITextField alloc] initWithFrame:CGRectMake(0, 10, kScreenWidth, 40)];
     numField.placeholder=@"请输入您的原密码";
     
@@ -110,95 +110,51 @@
 }
 
 -(void)loginClick{//注册
-//
-//    if (numField.text.length>0&&passField.text.length>0&&confirmField.text.length>0&&[passField.text isEqualToString:confirmField.text]) {
-//        active=[[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(kScreenWidth/2-25, (kScreenHeight-100)/2, 50, 50)];
-//        active.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-//        active.color = [UIColor blackColor];
-//        active.hidesWhenStopped = YES;
-//
-//        [self.view addSubview:active];
-//        [active startAnimating];
-//
-//        //参数：apiID;apiKey;code;uType;data
-//        //说明:uType [=asms 发送验证码][=areg 注册] code默认传8888
-//        NSDictionary *newDic=@{@"userId":@"0",@"uName":numField.text,@"uPwd":[DHHleper getPassWordWithstring:passField.text],@"loginNum":@"1",@"dtCreate":@"",@"isLock":@"false",@"isLogistics":@"false",@"logo":@"",@"key":[DHHleper getUserTokenWithName:[NSString stringWithFormat:@"%@",numField.text]],@"groupId":@"0"};
-//        NSString *utype;
-//        if (self.inType.intValue==1) {
-//            utype=@"areg";
-//        }else{
-//            utype=@"epwd";
-//        }
-//        NSString *jsonStr=[DHHleper convertToJsonData:newDic];
-//        NSDictionary *info1=@{@"apiID":apiID,@"apiKey":apiKey,@"code":checkField.text,@"uType":utype,@"data":jsonStr};
-//        [manager GET:getCodeAndResUrl parameters:info1 progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//            if (responseObject) {
-//                [active stopAnimating];
-//                NSLog(@"注册测试");
-//                NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
-//                if ([resInfo[@"status"]intValue ]==17800) {//注册成功
-//                    NSString *mess;
-//                    if (self.inType.intValue==1) {
-//                        mess=@"注册成功";
-//                    }else{
-//                        BOOL isLogin=[[NSUserDefaults standardUserDefaults] objectForKey:@"isLogin"];
-//                        if (isLogin) {
-//
-//                            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"isLogin"];
-//
-//                            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"userName"];
-//
-//
-//                            [[NSNotificationCenter defaultCenter] postNotificationName:@"Login" object:nil userInfo:nil];}
-//                        mess=@"修改成功";
-//                    }
-//                    UIAlertController *actionAlert=[UIAlertController alertControllerWithTitle:messTitle message:mess preferredStyle:(UIAlertControllerStyleAlert)];
-//
-//                    UIAlertAction *ok=[UIAlertAction actionWithTitle:@"确定" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-//                        self.callBackBlock();
-//                        [self dismissViewControllerAnimated:YES completion:nil];
-//                    }];
-//
-//                    [actionAlert addAction:ok];
-//                    [self presentViewController:actionAlert animated:YES completion:nil];
-//                }else {//用户已存在
-//                    NSString *info=resInfo[@"info"];
-//                    UIAlertController *actionAlert=[UIAlertController alertControllerWithTitle:messTitle message:info preferredStyle:(UIAlertControllerStyleAlert)];
-//
-//                    UIAlertAction *ok=[UIAlertAction actionWithTitle:@"确定" style:(UIAlertActionStyleCancel) handler:nil];
-//
-//                    [actionAlert addAction:ok];
-//                    [self presentViewController:actionAlert animated:YES completion:nil];
-//                }
-//
-//            }
-//        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//            NSString *mess;
-//            if (self.inType.intValue==1) {
-//                mess=@"注册失败,请检查您的网络是否正常";
-//            }else{
-//                mess=@"修改失败,请检查您的网络是否正常";
-//            }
-//            UIAlertController *actionAlert=[UIAlertController alertControllerWithTitle:messTitle message:mess preferredStyle:(UIAlertControllerStyleAlert)];
-//
-//            UIAlertAction *ok=[UIAlertAction actionWithTitle:@"取消" style:(UIAlertActionStyleCancel) handler:nil];
-//
-//            [actionAlert addAction:ok];
-//            [self presentViewController:actionAlert animated:YES completion:nil];
-//
-//
-//        }];
-//
-//
-//    }else{
-//        UIAlertController *actionAlert=[UIAlertController alertControllerWithTitle:messTitle message:@"输入不能为空哦" preferredStyle:(UIAlertControllerStyleAlert)];
-//
-//        UIAlertAction *ok=[UIAlertAction actionWithTitle:@"取消" style:(UIAlertActionStyleCancel) handler:nil];
-//
-//        [actionAlert addAction:ok];
-//        [self presentViewController:actionAlert animated:YES completion:nil];
-//
-//    }
+    if (numField.text.length>0&&passField.text.length>0&&confirmField.text.length>0&&[passField.text isEqualToString:confirmField.text]) {
+        [MBProgressHUD showMessag:@"修改中···" toView:self.view];
+        //        参数:phone 手机号
+        //        password 密码
+        //        newPwd 新密码
+        NSDictionary *info1=@{@"phone":userInfo[@"phone"],@"password":[DHHleper md5String:numField.text],@"newPwd":[DHHleper md5String:confirmField.text],@"usertype":@"2"};
+        [manager POST:kChangePWDURL parameters:info1 progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            if (responseObject) {
+                NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];
+                if (resInfo) {
+                    NSString *state=resInfo[@"result"];
+                    if (state.integerValue==200) {
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        
+                        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"修改密码" message:@"密码修改成功！请重新登录！" preferredStyle:(UIAlertControllerStyleAlert)];
+                        UIAlertAction *ok=[UIAlertAction actionWithTitle:@"确定" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+                            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"UserInfo"];
+                            [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"isLogin"];
+                            UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:[[NLLoginViewController alloc]init]];
+                            
+                            [[UIApplication sharedApplication].keyWindow setRootViewController:nav];
+                        }];
+                        [alert addAction:ok];
+                        [self presentViewController:alert animated:YES completion:nil];
+                    }else{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [MBProgressHUD showError:@"修改失败" toView:nil];
+                    }
+                    
+                }else{
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [MBProgressHUD showError:@"数据格式错误" toView:nil];
+                }
+            }else{
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [MBProgressHUD showError:@"服务器无响应" toView:nil];
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"网络错误，请检查网络是否正常" toView:nil];
+        }];
+    }else{
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD showError:@"请输入正确的密码" toView:nil];
+    }
 }
 
 - (void)textFieldDidChange:(UITextField *)textField{
@@ -213,12 +169,13 @@
     //    }
     if (passField.text.length>0&&numField.text.length>0&&confirmField.text.length>0&&[passField.text isEqualToString:confirmField.text]) {
         loginBtn.userInteractionEnabled=YES;
-        loginBtn.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"green"]];
+        loginBtn.backgroundColor=[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue"]];
         
     }else{
         loginBtn.userInteractionEnabled=NO;
         loginBtn.backgroundColor=[UIColor grayColor];
     }
+    
  
     
 }

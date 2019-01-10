@@ -13,7 +13,7 @@ pod 'YYCache'
 pod 'MJExtension'
 pod 'MBProgressHUD'
 pod 'MJRefresh'
-
+pod 'YYModel'
 
   
 end

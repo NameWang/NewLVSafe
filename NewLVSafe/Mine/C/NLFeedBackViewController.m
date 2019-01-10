@@ -32,7 +32,7 @@
     self.view.backgroundColor=kBGWhiteColor;
     [self addLeftItemWithImageName:@"leftbackicon_white_titlebar_24x24_@2x"];
     segment=[[UISegmentedControl alloc] initWithItems:@[@"提反馈",@"我的反馈"] ];
-    segment.frame=CGRectMake(0, 0, kScreenWidth, 30);
+    segment.frame=CGRectMake(0, 0, kScreenWidth, 30*kScale);
     segment.tintColor=[UIColor whiteColor];
     [segment addTarget:self action:@selector(segmentClick:) forControlEvents:(UIControlEventValueChanged)];
     //设置Segment的字体
@@ -126,13 +126,13 @@
     bgView.backgroundColor=kBGWhiteColor;
     textV = [[UITextView alloc] init];
     textV.delegate=self;
-    textV.frame = CGRectMake(15, 10, kScreenWidth-30, 200);
+    textV.frame = CGRectMake(15, 10, kScreenWidth-30, 200*kScale);
     textV.placeholder = @"您的建议与反馈是我们前进的动力";
     textV.placeholderColor = [UIColor grayColor];
     textV.textColor = [UIColor blackColor];
     textV.font = [UIFont systemFontOfSize:15];
     [bgView addSubview:textV];
-    sendBtn=[UIButton normalBtnWithFrame:CGRectMake(10, CGRectGetMaxY(textV.frame)+15, kScreenWidth-20, 30) title:@"发送" size:17 color:[UIColor grayColor] superView:bgView];
+    sendBtn=[UIButton normalBtnWithFrame:CGRectMake(10, CGRectGetMaxY(textV.frame)+15, kScreenWidth-20, 30*kScale) title:@"发送" size:17 color:[UIColor grayColor] superView:bgView];
     [sendBtn addTarget:self action:@selector(sendClick) forControlEvents:(UIControlEventTouchUpInside)];
     [sendBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
     sendBtn.backgroundColor=[UIColor whiteColor];

@@ -11,10 +11,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NLMessageModel : NSObject
-@property(nonatomic,copy)NSString *userName;
-@property(nonatomic,copy)NSString *picPath;
-@property(nonatomic,copy)NSString *message;
-@property(nonatomic,copy)NSString *userId;
+@property(nonatomic,copy)NSString *content;
+@property(nonatomic,copy)NSString *pushtime;
+@property(nonatomic,copy)NSString *title;
+
 
 @end
 

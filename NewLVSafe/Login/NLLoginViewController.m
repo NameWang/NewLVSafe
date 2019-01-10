@@ -13,7 +13,8 @@
 
 @interface NLLoginViewController ()<UITextFieldDelegate,SFSafariViewControllerDelegate>
 {
-    AvtionImageView *bgScrollView;
+    UIScrollView *bgScrollView;
+    AvtionImageView *imgBgView;
     UIImageView *logoImgView;
     UITextField *numField;
     UITextField *psdField;
@@ -27,19 +28,22 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationController.navigationBar.hidden=YES;
-    bgScrollView=[[AvtionImageView alloc] initWithFrame:self.view.bounds];
-    bgScrollView.userInteractionEnabled=YES;
-    bgScrollView.image=[UIImage imageNamed:@"loginbg"];
+    bgScrollView=[[UIScrollView alloc] initWithFrame:CGRectMake(0, -20-kiPhoneX_Top_Height-kiPhoneX_Bottom_Height, kScreenWidth, kiPhoneX_Bottom_Height+kScreenHeight+kiPhoneX_Top_Height+20)];
+    bgScrollView.scrollEnabled=NO;
+    [self.view addSubview:bgScrollView];
+    imgBgView=[[AvtionImageView alloc] initWithFrame:bgScrollView.bounds];
+    imgBgView.userInteractionEnabled=YES;
+    imgBgView.image=[UIImage imageNamed:@"loginbg"];
    // bgScrollView.backgroundColor=[UIColor colorWithPatternImage:];
     
-    [self.view addSubview:bgScrollView];
+    [bgScrollView addSubview:imgBgView];
   
     //
     logoImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 100, kScreenWidth, 80)];
     logoImgView.image=[UIImage imageNamed:@"logo"];
-    [bgScrollView addSubview:logoImgView];
+    [imgBgView addSubview:logoImgView];
     //
-    numField=[[UITextField alloc] initWithFrame:CGRectMake(40, kScreenHeight-300, kScreenWidth-80, 30)];
+    numField=[[UITextField alloc] initWithFrame:CGRectMake(40, CGRectGetMaxY(logoImgView.frame)+100*kScale, kScreenWidth-80, 30*kScale)];
     numField.borderStyle= UITextBorderStyleRoundedRect;
     numField.placeholder=@"请输入手机号";
     numField.delegate=self;
@@ -49,10 +53,11 @@
     left.font=[UIFont fontWithName:@"iconfont" size:25];
     left.text=@"\U0000e638";
     numField.leftView=left;
+    numField.keyboardType = UIKeyboardTypeNumberPad;
     numField.leftViewMode=UITextFieldViewModeAlways;
-    [bgScrollView addSubview:numField];
+    [imgBgView addSubview:numField];
     //
-    psdField=[[UITextField alloc] initWithFrame:CGRectMake(40, CGRectGetMaxY(numField.frame)+20, kScreenWidth-80, 30)];
+    psdField=[[UITextField alloc] initWithFrame:CGRectMake(40, CGRectGetMaxY(numField.frame)+20, kScreenWidth-80, 30*kScale)];
     psdField.borderStyle= UITextBorderStyleRoundedRect;
     psdField.placeholder=@"请输入密码";
     psdField.secureTextEntry=YES;
@@ -65,9 +70,9 @@
     left2.font=[UIFont fontWithName:@"iconfont" size:25];
     left2.text=@"\U0000e6a0";
     psdField.leftView=left2;
-    [bgScrollView addSubview:psdField];
+    [imgBgView addSubview:psdField];
     //
-    loginBtn=[[UIButton alloc] initWithFrame:CGRectMake(40, CGRectGetMaxY(psdField.frame)+20, kScreenWidth-80, 30)];
+    loginBtn=[[UIButton alloc] initWithFrame:CGRectMake(40, CGRectGetMaxY(psdField.frame)+20, kScreenWidth-80, 30*kScale)];
     UIBezierPath *path=[UIBezierPath bezierPathWithRoundedRect:loginBtn.bounds byRoundingCorners:(UIRectCornerAllCorners) cornerRadii:CGSizeMake(15, 15)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc]init];
     //设置大小
@@ -84,7 +89,7 @@
         [loginBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
     }
     [loginBtn addTarget:self action:@selector(loginClick) forControlEvents:(UIControlEventTouchUpInside)];
-    [bgScrollView addSubview:loginBtn];
+    [imgBgView addSubview:loginBtn];
     //
     forgetBtn=[[UIButton alloc] initWithFrame:CGRectMake(50, CGRectGetMaxY(loginBtn.frame)+20, 70, 25)];
     [forgetBtn setTitleColor:[UIColor blackColor] forState:(UIControlStateNormal)];
@@ -92,7 +97,7 @@
     
     forgetBtn.titleLabel.font=[UIFont systemFontOfSize:13];
     [forgetBtn addTarget:self action:@selector(forgetPsd) forControlEvents:(UIControlEventTouchUpInside)];
-    [bgScrollView addSubview:forgetBtn];
+    [imgBgView addSubview:forgetBtn];
     //
 //    registBtn=[[UIButton alloc] initWithFrame:CGRectMake(kScreenWidth-120, CGRectGetMaxY(loginBtn.frame)+20, 70, 25)];
 //    [registBtn setTitleColor:[UIColor whiteColor] forState:(UIControlStateNormal)];
@@ -106,7 +111,7 @@
     [privateBtn setTitle:@"“隐私政策”" forState:(UIControlStateNormal)];
     privateBtn.titleLabel.font=[UIFont systemFontOfSize:13];
     [privateBtn addTarget:self action:@selector(privateURLClick) forControlEvents:(UIControlEventTouchUpInside)];
-    [bgScrollView addSubview:privateBtn];
+    [imgBgView addSubview:privateBtn];
 
     // 键盘出现的通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardWillShowNotification object:nil];
@@ -154,25 +159,36 @@
 {
     // 获取键盘的高度
     CGRect frame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-   
-    CGFloat heigh=bgScrollView.frame.size.height-CGRectGetMaxY(forgetBtn.frame);
+     __weak UIScrollView *sss=bgScrollView;
+    CGFloat heigh=kScreenHeight-CGRectGetMaxY(forgetBtn.frame);
     if (heigh>frame.size.height) {
         
     }else{
+//        [UIView animateWithDuration:0.5 animations:^{
+//
+//            [self resetFrameWithHeight:frame.size.height-heigh];
+//        }];
+     //    logoImgView.frame=CGRectMake(0, 100+heigh, kScreenWidth, 80);
         [UIView animateWithDuration:0.5 animations:^{
-          
-            [self resetFrameWithHeight:frame.size.height-heigh];
-        }];
+            sss.frame=CGRectMake(0, 0, kScreenWidth, kScreenHeight-frame.size.height);
+            sss.contentSize=CGSizeMake(0, kScreenHeight);
+            sss.contentOffset=CGPointMake(0, frame.size.height-heigh);
+            
         
+        }];
+          bgScrollView.scrollEnabled=YES;
     }
 }
 - (void)keyboardWillBeHiden:(NSNotification *)notification
 {
+    __weak UIScrollView *sss=bgScrollView;
+   //  logoImgView.frame=CGRectMake(0, 100, kScreenWidth, 80);
     [UIView animateWithDuration:0.5 animations:^{
-      
-        [self resetFrameWithHeight:0];
+        sss.frame=CGRectMake(0, -20-kiPhoneX_Top_Height-kiPhoneX_Bottom_Height, kScreenWidth, kiPhoneX_Bottom_Height+kScreenHeight+kiPhoneX_Top_Height+20);
+        sss.contentSize=CGSizeMake(0,0);
     }];
-
+    
+    bgScrollView.scrollEnabled=NO;
 }
 
 
@@ -210,11 +226,60 @@
 
 //登录事件
 -(void)loginClick{
-    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"isLogin"];
-    [[NSUserDefaults standardUserDefaults] setObject:@{@"uname":@"傻子",@"sign":@"Wish sunshine in your eyes"} forKey:@"UserInfo"];
-    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:[[NLMapViewController alloc]init]];
-    
-    [[UIApplication sharedApplication].keyWindow setRootViewController:nav];
+    if (numField.text.length==11&&psdField.text.length>=6&&psdField.text.length<=15) {
+        loginBtn.userInteractionEnabled=NO;
+        __weak UIButton *weakBtn=loginBtn;
+        [MBProgressHUD showMessag:@"登录中···" toView:self.view];
+        AFHTTPSessionManager *manager=[AFHTTPSessionManager manager];
+        manager.responseSerializer=[AFHTTPResponseSerializer serializer];
+        NSString *token=[[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
+        if ([token isKindOfClass:[NSNull class]]||token==nil) {
+            token=@"";
+        }
+        NSDictionary *param=@{@"phone":numField.text,@"password":[DHHleper md5String:psdField.text],@"token":token};
+        [manager POST:kLoginURL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            if (responseObject) {
+                NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
+                if (resInfo) {
+                    NSString *status=resInfo[@"result"];
+                    if (status.integerValue==200) {
+                        NSDictionary *loginInfo=[DHHleper transToResposeDicFromloginDic:resInfo[@"login"]];
+                        
+                        [[NSUserDefaults standardUserDefaults] setObject:loginInfo forKey:@"UserInfo"];
+                        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"isLogin"];
+                        
+                        weakBtn.userInteractionEnabled=YES;
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [MBProgressHUD showSuccess:@"登录成功" toView:nil];
+                        UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:[[NLMapViewController alloc]init]];
+                        
+                        [[UIApplication sharedApplication].keyWindow setRootViewController:nav];
+                    }else{
+                        
+                        weakBtn.userInteractionEnabled=YES;
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [MBProgressHUD showError:@"登录失败" toView:self.view];
+                    }
+                    
+                }else{
+                    weakBtn.userInteractionEnabled=YES;
+                    [MBProgressHUD hideHUDForView:self.view animated:YES];
+                    [MBProgressHUD showError:@"数据格式错误" toView:self.view];
+                }
+            }else{
+                weakBtn.userInteractionEnabled=YES;
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [MBProgressHUD showError:@"服务器无响应" toView:self.view];
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            weakBtn.userInteractionEnabled=YES;
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"网络错误，请检查网络是否正常" toView:self.view];
+        }];
+        
+    }
+   
+   
 }
 //忘记密码
 -(void)forgetPsd{

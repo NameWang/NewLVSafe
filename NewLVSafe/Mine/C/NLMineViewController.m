@@ -101,7 +101,7 @@
     
 }
 -(void)initTableView{
-    mineTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(topView.frame)+2, width, 180) style:(UITableViewStylePlain)];
+    mineTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(topView.frame)+2, width, 44*4*kScale) style:(UITableViewStylePlain)];
     [mineTableView registerNib:[UINib nibWithNibName:@"NLMineTableViewCell" bundle:nil] forCellReuseIdentifier:@"NLMineTableViewCell"];
   
     
@@ -109,7 +109,7 @@
     mineTableView.dataSource=self;
     mineTableView.tableFooterView=[[UIView alloc] init];
     [self.view addSubview:mineTableView];
-    quitBtn=[UIButton normalBtnWithFrame:CGRectMake(10, CGRectGetMaxY(mineTableView.frame)+20, width-20, 30) title:@"退出登录" size:15 color:[UIColor whiteColor] superView:self.view];
+    quitBtn=[UIButton normalBtnWithFrame:CGRectMake(10, CGRectGetMaxY(mineTableView.frame)+20, width-20, 30*kScale) title:@"退出登录" size:15 color:[UIColor whiteColor] superView:self.view];
     quitBtn.backgroundColor=kBlueColor;
     [quitBtn addTarget:self action:@selector(quitClick) forControlEvents:(UIControlEventTouchUpInside)];
 }
@@ -182,6 +182,9 @@
             break;
     }
 }
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 44*kScale;
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     return dataSource.count;
@@ -189,36 +192,52 @@
 }
 - (void)imagePickerController:(UIImagePickerController *)picker didSelectImage:(UIImage *)image
 {
-    
-    
     if (image)
     {
         //  [self.userDataHandler uploadHeadImage:image];
-        //        __weak AvtionImageView *imgv=iconImgView;
-        //        dispatch_async(dispatch_get_global_queue(DISPANLH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //            NSDictionary *dict = @{@"uid" : @""};
-        //
-        //            AFHTTPSessionManager *s_manager = [AFHTTPSessionManager manager];
-        //            s_manager.responseSerializer=[AFHTTPResponseSerializer serializer];
-        //            NSString *url =@"";
-        //
-        //            NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
-        //            [s_manager POST:url parameters:dict constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        //                 [formData appendPartWithFileData:imageData name:@"picFile" fileName:@"picFile.jpg" mimeType:@"image/png"];
-        //            } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        //                if (responseObject) {
-        //                      [MBProgressHUD showSuccess:@"头像修改成功!"];
-        //                    dispatch_async(dispatch_get_main_queue(), ^{
-        //                          imgv.image=image;
-        //                    });
-        //                }
-        //
-        //            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        //                DLog(@"%@",error.domain);
-        //            }];
-        //
-        //        });
-        iconImgView.image=image;
+        __weak AvtionImageView *imgv=iconImgView;
+        __weak NSDictionary *info=userInfo;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSDictionary *dict = @{@"id" : info[@"id"]};
+            
+            AFHTTPSessionManager *s_manager = [AFHTTPSessionManager manager];
+            s_manager.responseSerializer=[AFHTTPResponseSerializer serializer];
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+            [s_manager POST:kUploadICONURl parameters:dict constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                [formData appendPartWithFileData:imageData name:@"file" fileName:@"picFile.jpg" mimeType:@"image/png"];
+            } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+                if (responseObject) {
+                    NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
+                    if (resInfo) {
+                        NSString *states=resInfo[@"result"];
+                        if (states.integerValue==200) {
+                            [MBProgressHUD showSuccess:@"头像修改成功!"];
+                            NSMutableDictionary *resddd=[NSMutableDictionary dictionaryWithDictionary:info];
+                            [resddd setValue:resInfo[@"fileName"] forKey:@"headimgurl"];
+                            [[NSUserDefaults standardUserDefaults] setObject:[NSDictionary dictionaryWithDictionary:resddd] forKey:@"UserInfo"];
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                imgv.image=image;
+                                
+                            });
+                        }else{
+                            [MBProgressHUD showError:@"上传失败!" toView:nil];
+                        }
+                        
+                    }else{
+                        
+                        [MBProgressHUD showError:@"数据格式错误" toView:nil];
+                    }
+                    
+                }else{
+                    [MBProgressHUD showError:@"服务器无响应" toView:nil];
+                }
+                
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [MBProgressHUD showError:@"网络错误，请检查网络是否正常" toView:nil];
+            }];
+            
+        });
+        
     }
     
     [picker dismissViewControllerAnimated:YES completion:nil];

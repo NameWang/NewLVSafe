@@ -8,22 +8,34 @@
 
 #import "RouteAnnotation.h"
 
+#define MYBUNDLE_NAME @ "mapapi.bundle"
+#define MYBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: MYBUNDLE_NAME]
+#define MYBUNDLE [NSBundle bundleWithPath: MYBUNDLE_PATH]
 @implementation RouteAnnotation
 
 @synthesize type = _type;
 @synthesize degree = _degree;
 
-
+- (NSString*)getMyBundlePath1:(NSString *)filename
+{
+    
+    NSBundle * libBundle = MYBUNDLE ;
+    if ( libBundle && filename ){
+        NSString * s=[[libBundle resourcePath ] stringByAppendingPathComponent:filename];
+        return s;
+    }
+    return nil ;
+}
 - (BMKAnnotationView*)getRouteAnnotationView:(BMKMapView *)mapview
 {
     BMKAnnotationView* view = nil;
     switch (_type) {
-        case 0:
+        case 2:
         {
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"start_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc] initWithAnnotation:self reuseIdentifier:@"start_node"];
-                view.image = [UIImage imageNamed:@"icon_start.png"];
+                view.image = [UIImage imageNamed:@"mapapi.bundle/images/icon_nav_start@2x"];
                 view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
             }
         }
@@ -33,12 +45,12 @@
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"end_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc]initWithAnnotation:self reuseIdentifier:@"end_node"];
-                view.image = [UIImage imageNamed:@"icon_end.png"];
+                view.image = [UIImage imageNamed:@"mapapi.bundle/images/icon_nav_end@2x"];
                 view.centerOffset = CGPointMake(0, -(view.frame.size.height * 0.5));
             }
         }
             break;
-        case 2:
+        case 0:
         {
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"bus_node"];
             if (view == nil) {
@@ -52,7 +64,7 @@
             view = [mapview dequeueReusableAnnotationViewWithIdentifier:@"rail_node"];
             if (view == nil) {
                 view = [[BMKAnnotationView alloc]initWithAnnotation:self reuseIdentifier:@"rail_node"];
-                view.image = [UIImage imageNamed:@"icon_rail.png"];
+                view.image = [UIImage imageNamed:@"mapapi.bundle/images/pin_red@2x"];
             }
         }
             break;
@@ -66,6 +78,7 @@
             }
             
             UIImage* image = [UIImage imageNamed:@"icon_direction.png"];
+            //NSLog(@"%ld",(long)_degree);
             view.image = [self imageRotatedByDegrees:_degree withimage:image];
         }
             break;
@@ -78,8 +91,9 @@
                 [view setNeedsDisplay];
             }
             
-            UIImage* image = [UIImage imageNamed:@"icon_waypoint.png"];
+            UIImage* image = [UIImage imageNamed:@"mapapi.bundle/images/icon_direction@2x"];
             view.image = [self imageRotatedByDegrees:_degree withimage:image];
+            
         }
             break;
             
@@ -122,5 +136,8 @@
     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+    
 }
+
+
 @end

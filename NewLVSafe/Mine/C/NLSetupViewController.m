@@ -1,5 +1,5 @@
 //
-//  NLSetupViewController.m
+//  PSSetupViewController.m
 //  PeopleSafity
 //
 //  Created by 何心晓 on 2018/10/23.
@@ -7,13 +7,13 @@
 //
 
 #import "NLSetupViewController.h"
-
+#import "NLLoginViewController.h"
 @interface NLSetupViewController ()
 {
     UISwitch *soundSwitch,*shakeSwitch;
     UILabel *statusLabel,*noLabel,*soundLabel,*shakeLabel,*configLabel1,*configLabel2,*kaiqiLabel;
-    UIButton *openBtn;
-    BOOL openNoti;
+    UIButton *openBtn,*quitBtn;
+    BOOL openNoti,soundClosed,shakeClosed;
 }
 @end
 
@@ -42,37 +42,65 @@
     configLabel1.text=@"将应用还原到刚安装状态。";
     configLabel1.font=[UIFont systemFontOfSize:12];
     [self.view addSubview:configLabel1];
+    
+    [self initNotiArea];
+    //
+    BOOL isLogin=[[[NSUserDefaults standardUserDefaults] objectForKey:@"isLogin"] boolValue];
+    if (isLogin) {
+        quitBtn=[[UIButton alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(configLabel2.frame)+30, kScreenWidth, 30*kScale)];
+        [quitBtn setTitle:@"退出登录" forState:(UIControlStateNormal)];
+        // [quitBtn setTitleColor:[UIColor redColor] forState:(UIControlStateNormal)];
+        quitBtn.backgroundColor=kBlueColor;
+        [quitBtn addTarget:self action:@selector(quitClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:quitBtn];
+    }else{
+        
+    }
+    
+}
+-(void)initNotiArea{
     openNoti=[self isUserNotificationEnable];
     UIView *bgView2=[[UIView alloc] init];
     bgView2.backgroundColor=[UIColor whiteColor];
-     configLabel2=[[UILabel alloc] init];
-    if (openNoti) {
-          bgView2.frame=CGRectMake(0, CGRectGetMaxY(configLabel1.frame), kScreenWidth, 90);
+    configLabel2=[[UILabel alloc] init];
+    if (openNoti) {//通知开启
+        soundClosed=[[[NSUserDefaults standardUserDefaults] objectForKey:@"soundClosed"] boolValue];
+        shakeClosed=[[[NSUserDefaults standardUserDefaults] objectForKey:@"shakeClosed"] boolValue];
+        bgView2.frame=CGRectMake(0, CGRectGetMaxY(configLabel1.frame), kScreenWidth, 100);
         statusLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, 0, 120, 30)];
         statusLabel.text=@"接收消息通知";
         [bgView2 addSubview:statusLabel];
-        kaiqiLabel=[[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth-80, 0, 50, 30)];
+        kaiqiLabel=[[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth-90, 0, 60, 30)];
         kaiqiLabel.textColor=[UIColor grayColor];
         kaiqiLabel.text=@"已开启";
         [bgView2 addSubview:kaiqiLabel];
         soundLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, 30, 120, 30)];
         soundLabel.text=@"声音";
         [bgView2 addSubview:soundLabel];
-        shakeLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, 60, 120, 30)];
+        shakeLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, 65, 120, 30)];
         shakeLabel.text=@"震动";
         [bgView2 addSubview:shakeLabel];
         soundSwitch=[[UISwitch alloc] initWithFrame:CGRectMake(kScreenWidth-80, 30, 50, 30)];
-        soundSwitch.on=YES;
+        if (soundClosed) {
+            soundSwitch.on=NO;
+        }else{
+            soundSwitch.on=YES;
+        }
+        
         [soundSwitch addTarget:self action:@selector(soundChange:) forControlEvents:(UIControlEventValueChanged)];
         [bgView2 addSubview:soundSwitch];
-        shakeSwitch=[[UISwitch alloc] initWithFrame:CGRectMake(kScreenWidth-80, 60, 50, 30)];
-        shakeSwitch.on=YES;
+        shakeSwitch=[[UISwitch alloc] initWithFrame:CGRectMake(kScreenWidth-80, 65, 50, 30)];
+        if (shakeClosed) {
+            shakeSwitch.on=NO;
+        }else{
+            shakeSwitch.on=YES;
+        }
         [shakeSwitch addTarget:self action:@selector(shakeChange:) forControlEvents:(UIControlEventValueChanged)];
         [bgView2 addSubview:shakeSwitch];
         
-         configLabel2.text=@"此应用在运行时，设置是否需要声音或震动";
+        configLabel2.text=@"此应用在运行时，设置是否需要声音或震动";
         configLabel2.frame=CGRectMake(10, CGRectGetMaxY(bgView2.frame), kScreenWidth-20, 30);
-    }else{
+    }else{//通知关闭
         bgView2.frame=CGRectMake(0, CGRectGetMaxY(configLabel1.frame), kScreenWidth, 60);
         noLabel=[[UILabel alloc] initWithFrame:CGRectMake(10, 5, kScreenWidth-90, 50)];
         noLabel.numberOfLines=2;
@@ -88,23 +116,64 @@
         configLabel2.frame=CGRectMake(10, CGRectGetMaxY(bgView2.frame), kScreenWidth-20, 30);
     }
     [self.view addSubview:bgView2];
-   
+    
     configLabel2.backgroundColor=kBGWhiteColor;
     configLabel2.textColor=[UIColor grayColor];
     configLabel2.numberOfLines=2;
     configLabel2.font=[UIFont systemFontOfSize:12];
     [self.view addSubview:configLabel2];
-    //
-   
+}
+#pragma mark 退出登录
+-(void)quitClick{
+    AFHTTPSessionManager *manager=[AFHTTPSessionManager manager];
+    manager.responseSerializer=[AFHTTPResponseSerializer serializer];
+    NSDictionary *userinfo=[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"];
+    [manager POST:kQuitURL parameters:@{@"id":userinfo[@"id"]} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (responseObject) {
+            NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
+            if (resInfo) {
+                NSString *state=resInfo[@"result"];
+                if (state.integerValue==200) {
+                    [MBProgressHUD showSuccess:@"已退出登录"];
+                    
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"UserInfo"];
+                    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"isLogin"];
+                    UINavigationController *nav=[[UINavigationController alloc] initWithRootViewController:[[NLLoginViewController alloc]init]];
+                    
+                    [[UIApplication sharedApplication].keyWindow setRootViewController:nav];
+                   
+                }else{
+                    [MBProgressHUD showError:@"网络错误，请重试" toView:nil];
+                }
+            }else{
+                [MBProgressHUD showError:@"网络错误，请重试" toView:nil];
+            }
+        }else{
+            [MBProgressHUD showError:@"服务器无响应" toView:nil];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [MBProgressHUD showError:@"网络错误，请检查网络是否正常" toView:nil];
+    }];
     
 }
-
 #pragma mark 通知方式更改
 -(void)soundChange:(UISwitch*)soswitch{
-    
+    if (soswitch.on) {
+        [soswitch setOn:NO];
+        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"soundClosed"];
+    }else{
+        [soswitch setOn:YES];
+        [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:@"soundClosed"];
+    }
 }
 -(void)shakeChange:(UISwitch*)shswitch{
-    
+    if (shswitch.on) {
+        [shswitch setOn:NO];
+        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"shakeClosed"];
+    }else{
+        [shswitch setOn:YES];
+        [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:@"shakeClosed"];
+    }
 }
 #pragma mark 判断用户是否允许接收通知
 -(BOOL)isUserNotificationEnable { //
@@ -125,7 +194,9 @@
     NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
     if ([application canOpenURL:url]) {
         if ([application respondsToSelector:@selector(openURL:options:completionHandler:)]) {
-            [application openURL:url options:@{} completionHandler:nil];
+            [application openURL:url options:@{} completionHandler:^(BOOL success) {
+                [self initNotiArea];
+            }];
         } else {
             [application openURL:url];
         }
@@ -136,7 +207,7 @@
 -(void)clearCacheClick{
     double cachesize=[self getCachesSize];
     
-    UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:[NSString stringWithFormat:@"此操作会将应用中所有数据(%.2fM)清空，请谨慎使用！",cachesize] preferredStyle:(UIAlertControllerStyleAlert)];
+    UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:[NSString stringWithFormat:@"此操作会将应用中缓存数据(%.2fM)清空，请谨慎使用！",cachesize] preferredStyle:(UIAlertControllerStyleAlert)];
     UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"取消" style:(UIAlertActionStyleCancel) handler:nil];
     [alert addAction:cancel];
     UIAlertAction *deletes=[UIAlertAction actionWithTitle:@"清除" style:(UIAlertActionStyleDestructive) handler:^(UIAlertAction * _Nonnull action) {
@@ -180,13 +251,13 @@
     return (mySize+sdFileSize)/1024.0/1024.0;
 }
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

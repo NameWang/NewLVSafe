@@ -74,6 +74,69 @@
 //    }
 //    return [addresses count] ? addresses : nil;
 //}
++(NLCarLocationInfoModel *)transNullmodel:(NLCarLocationInfoModel *)model{
+    if (model.province==nil) {
+        model.province=@"";
+    }
+    if (model.city==nil) {
+        model.city=@"";
+    }
+    if (model.prefecture==nil) {
+        model.prefecture=@"";
+    }
+    if (model.town==nil) {
+        model.town=@"";
+    }
+     if (model.addr==nil) {
+        model.addr=@"";
+    }
+    return model;
+}
++ (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
+{
+    if (jsonString == nil) {
+        return nil;
+    }
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&err];
+    if(err) {
+        NSLog(@"json解析失败：%@",err);
+        return nil;
+    }
+    return dic;
+}
++(NSDictionary *)transToResposeDicFromloginDic:(NSDictionary *)dic{
+    NSArray *keys=[dic allKeys];
+    NSMutableDictionary *resultDic=[NSMutableDictionary dictionaryWithDictionary:dic];
+    for (int i=0; i<keys.count; i++) {
+        NSString *key=keys[i];
+        NSString *value=dic[key];
+        if ([value isKindOfClass:[NSNull class]]||value==nil) {
+            value=@"";
+            [resultDic setValue:@"" forKey:key];
+        }
+    }
+    
+    return resultDic;
+}
++(NSDictionary *)findCenterStringWithLocationAry:(NSArray *)ary{
+    NSMutableArray *latiAry=[NSMutableArray array];
+    NSMutableArray *longAry=[NSMutableArray array];
+    for (NSDictionary *cllDic in ary) {
+        NSNumber *latitude=[NSNumber numberWithDouble:[cllDic[@"latitude"]doubleValue]];
+        NSNumber *longtude=[NSNumber numberWithDouble:[cllDic[@"longitude"]doubleValue]];
+        [latiAry addObject:latitude];
+        [longAry addObject:longtude];
+    }
+    [latiAry sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [obj1 compare:obj2];//升序
+    }];
+    [longAry sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        return [obj1 compare:obj2];//升序
+    }];
+    return @{@"minlatitude":@([latiAry[0] doubleValue]),@"minlongitude":@([longAry[0] doubleValue]),@"maxlatitude":@([[latiAry lastObject] doubleValue]),@"maxlongitude":@([[longAry lastObject] doubleValue])};
+}
 +(NSString *)getLocalDate{
     NSDate *date=[NSDate date];
     NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
