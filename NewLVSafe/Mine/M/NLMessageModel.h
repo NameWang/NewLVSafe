@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,copy)NSString *content;
 @property(nonatomic,copy)NSString *pushtime;
 @property(nonatomic,copy)NSString *title;
+@property(nonatomic,copy)NSString *state;
+@property(nonatomic,copy)NSString *licensenum;
+@property(nonatomic,copy)NSString *type;
+@property(nonatomic,copy)NSString *color;
 
 
 @end

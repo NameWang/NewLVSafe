@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "NLCarLocationInfoModel.h"
+#import "NLMessageModel.h"
 @interface DHHleper : NSObject
 +(NSString *)getInternetDate;
 +(NSString *)getMD5Key;
@@ -29,6 +30,7 @@
 +(NSString*)getNetworkIPAddress;
 +(UIImage*)resizeImage:(UIImage*)image withSize:(CGSize)size;
 +(NLCarLocationInfoModel*)transNullmodel:(NLCarLocationInfoModel*)model;
++(NLMessageModel*)transNullMessagemodel:(NLMessageModel*)model;
 +(NSDictionary*)findCenterStringWithLocationAry:(NSArray*)ary;
 +(NSDictionary*)transToResposeDicFromloginDic:(NSDictionary*)dic;
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;

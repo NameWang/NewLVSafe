@@ -13,7 +13,6 @@
 		2D20A81121941E5F00A4E110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D20A81021941E5F00A4E110 /* Assets.xcassets */; };
 		2D20A81421941E5F00A4E110 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D20A81221941E5F00A4E110 /* LaunchScreen.storyboard */; };
 		2D20A81721941E5F00A4E110 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A81621941E5F00A4E110 /* main.m */; };
-		2D20A8DB2194201200A4E110 /* BMKWalkNaviViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A8662194200600A4E110 /* BMKWalkNaviViewController.mm */; };
 		2D20A8E62194201200A4E110 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D20A87C2194201000A4E110 /* mapapi.bundle */; };
 		2D20A8E72194201200A4E110 /* DHHleper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A87D2194201000A4E110 /* DHHleper.m */; };
 		2D20A8E82194201200A4E110 /* MBProgressHUD+Add.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A87F2194201000A4E110 /* MBProgressHUD+Add.m */; };
@@ -78,7 +77,7 @@
 		2D20A92F2194215A00A4E110 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A92E2194215A00A4E110 /* libc++.tbd */; };
 		2D20A9312194216800A4E110 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9302194216800A4E110 /* libsqlite3.0.tbd */; };
 		2D20A9332194216E00A4E110 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9322194216E00A4E110 /* CoreMotion.framework */; };
-		2D70C81021B0E048001657B2 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D70C80F21B0E048001657B2 /* iconfont.ttf */; };
+		2D55A05621F805CB001EFB45 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D55A05521F805CB001EFB45 /* iconfont.ttf */; };
 		2D70C81421B0EB3B001657B2 /* CarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70C81221B0EB3B001657B2 /* CarCollectionViewCell.m */; };
 		2D70C81521B0EB3B001657B2 /* CarCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D70C81321B0EB3B001657B2 /* CarCollectionViewCell.xib */; };
 		2D70C81721B11A06001657B2 /* loginbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D70C81621B11A06001657B2 /* loginbg.png */; };
@@ -159,8 +158,6 @@
 		2D20A81C21941E6000A4E110 /* NewLVSafeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewLVSafeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D20A82721941E6000A4E110 /* NewLVSafeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewLVSafeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D20A8392194200500A4E110 /* peoplesafe-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "peoplesafe-Prefix.pch"; sourceTree = "<group>"; };
-		2D20A8662194200600A4E110 /* BMKWalkNaviViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BMKWalkNaviViewController.mm; sourceTree = "<group>"; };
-		2D20A8682194200600A4E110 /* BMKWalkNaviViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BMKWalkNaviViewController.h; sourceTree = "<group>"; };
 		2D20A87B2194201000A4E110 /* RouteAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RouteAnnotation.h; sourceTree = "<group>"; };
 		2D20A87C2194201000A4E110 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = mapapi.bundle; sourceTree = "<group>"; };
 		2D20A87D2194201000A4E110 /* DHHleper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DHHleper.m; sourceTree = "<group>"; };
@@ -236,8 +233,8 @@
 		2D20A92E2194215A00A4E110 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2D20A9302194216800A4E110 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		2D20A9322194216E00A4E110 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		2D55A05521F805CB001EFB45 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		2D59CB3221B6658B000659B2 /* NewLVSafe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewLVSafe.entitlements; sourceTree = "<group>"; };
-		2D70C80F21B0E048001657B2 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		2D70C81121B0EB3B001657B2 /* CarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarCollectionViewCell.h; sourceTree = "<group>"; };
 		2D70C81221B0EB3B001657B2 /* CarCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CarCollectionViewCell.m; sourceTree = "<group>"; };
 		2D70C81321B0EB3B001657B2 /* CarCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CarCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -533,8 +530,6 @@
 				2DCC19B921AFDEB900B5FC92 /* NLHomeViewController.m */,
 				2DCC19BA21AFDEB900B5FC92 /* NLMapViewController.h */,
 				2DCC19BC21AFDEB900B5FC92 /* NLMapViewController.mm */,
-				2D20A8662194200600A4E110 /* BMKWalkNaviViewController.mm */,
-				2D20A8682194200600A4E110 /* BMKWalkNaviViewController.h */,
 				2DC7CCFB21B4C014000EC865 /* NLCallPoliceViewController.h */,
 				2DC7CCFC21B4C014000EC865 /* NLCallPoliceViewController.m */,
 			);
@@ -636,9 +631,9 @@
 		2D20A89F2194201100A4E110 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2D55A05521F805CB001EFB45 /* iconfont.ttf */,
 				2D70C81821B120A4001657B2 /* iconPlace.png */,
 				2D70C81621B11A06001657B2 /* loginbg.png */,
-				2D70C80F21B0E048001657B2 /* iconfont.ttf */,
 				2D20A8A02194201100A4E110 /* mine-s.png */,
 				2D20A8A12194201100A4E110 /* leftbackicon_white_titlebar_24x24_@3x.png */,
 				2D20A8A22194201100A4E110 /* ad.png */,
@@ -853,6 +848,7 @@
 				2D70C81721B11A06001657B2 /* loginbg.png in Resources */,
 				2D20A81421941E5F00A4E110 /* LaunchScreen.storyboard in Resources */,
 				2DCC1A0521AFDF0000B5FC92 /* NLMessageTableViewCell.xib in Resources */,
+				2D55A05621F805CB001EFB45 /* iconfont.ttf in Resources */,
 				2D20A9052194201200A4E110 /* home.png in Resources */,
 				2D20A9032194201200A4E110 /* find-s.png in Resources */,
 				2DCC19D521AFDEC700B5FC92 /* NLFindCarTableViewCell.xib in Resources */,
@@ -889,7 +885,6 @@
 				2D20A81121941E5F00A4E110 /* Assets.xcassets in Resources */,
 				2D20A90D2194201200A4E110 /* icon.png in Resources */,
 				2DCC1A0421AFDF0000B5FC92 /* NLMineTableViewCell.xib in Resources */,
-				2D70C81021B0E048001657B2 /* iconfont.ttf in Resources */,
 				2DCC19CF21AFDEC700B5FC92 /* NLHomeCarTableViewCell.xib in Resources */,
 				2D20A80F21941E4C00A4E110 /* Main.storyboard in Resources */,
 				2D20A9082194201200A4E110 /* locked.png in Resources */,
@@ -1008,7 +1003,6 @@
 				2D20A8FB2194201200A4E110 /* DBManager.m in Sources */,
 				2D20A8EC2194201200A4E110 /* AvtionImageView.m in Sources */,
 				2DCC19B821AFDEA800B5FC92 /* NLFindCarModel.m in Sources */,
-				2D20A8DB2194201200A4E110 /* BMKWalkNaviViewController.mm in Sources */,
 				2DCC19F621AFDEF200B5FC92 /* NLSetupViewController.m in Sources */,
 				2DCC19D121AFDEC700B5FC92 /* NLHomeCarTableViewCell.m in Sources */,
 				2DCC19CE21AFDEC700B5FC92 /* NLCarLocationTableViewCell.m in Sources */,

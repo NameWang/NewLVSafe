@@ -7,14 +7,11 @@
 //
 
 #import "NLMapViewController.h"
-#import <BaiduMapAPI_Map_For_WalkNavi/BMKMapView.h>
-#import <BaiduMapAPI_Map_For_WalkNavi/BMKMapComponent.h>
-#import <BaiduMapAPI_WalkNavi/BMKWalkNaviComponent.h>
 #import <BMKLocationKit/BMKLocationComponent.h>
 #import <BaiduMapAPI_Search/BMKSearchComponent.h>
 #import <BaiduMapAPI_Utils/BMKUtilsComponent.h>
 #import "RouteAnnotation.h"
-#import "BMKWalkNaviViewController.h"
+
 #import "NLCarLocationInfoModel.h"
 #import "NLCarLocationTableViewCell.h"
 #import "KKSliderMenuTool.h"
@@ -23,43 +20,50 @@
 #import "NLHomeCarModel.h"
 #import "NLCallPoliceViewController.h"
 #import "NLMessageViewController.h"
+#import "NLMessageModel.h"
 
-@interface NLMapViewController ()<BMKWalkCycleRoutePlanDelegate, BMKWalkCycleRouteGuidanceDelegate, BMKWalkCycleTTSPlayerDelegate,BMKLocationManagerDelegate, BMKGeoCodeSearchDelegate, BMKMapViewDelegate, BMKRouteSearchDelegate,UITableViewDelegate,UITableViewDataSource,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+@interface NLMapViewController ()<BMKLocationManagerDelegate, BMKGeoCodeSearchDelegate, BMKMapViewDelegate, BMKRouteSearchDelegate,UITableViewDelegate,UITableViewDataSource,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
 
 {
     BMKMapView *mapView;
     UIButton *userBtn,*carBtn,*notiBtn,*listBtn;
     UILabel *numLabel;
-    UIButton *timeBtn,*okBtn,*cancelBtn,*safeBtn;
+    UIButton *timeBtn,*okBtn,*cancelBtn,*lockBtn;
     UIView *dateBGView,*bgView,*safeView;
     UIDatePicker *datePicker;
-    CGFloat width;
     BOOL isMapView,isShow,isLogin;
     int  planPointCounts;
     AFHTTPSessionManager *manager;
     NSDictionary *userInfo;
 }
+@property (nonatomic, assign) int dataIndex;
 @property(nonatomic,strong)NSMutableArray *dataSource;
+@property(nonatomic,strong)NSMutableArray *messageSource;
 @property(nonatomic,strong)UICollectionView *homeCollectionView;
 @property (nonatomic, assign) BOOL haveTrail;
 @property (nonatomic, strong) BMKLocationManager *locationManager;
 @property (nonatomic, strong) BMKRouteSearch* routesearch;          ///算路搜索，进入步行导航前，把算路路线展示在地图上
 @property(nonatomic,strong)NSMutableArray *carLocationModelArray; //车辆位置信息数组
 @property(nonatomic,strong)NSMutableArray *carAnnotionArray; //车辆大头针数组
+@property(nonatomic,strong)NSMutableArray *tableDataSoure; //
 @property(nonatomic ,strong)UITableView  *locationTableView;
-@property (nonatomic, strong) RouteAnnotation* startAnnotation;  ///起点
-@property (nonatomic, strong) RouteAnnotation* endAnnotation;    ///终点
 @property (nonatomic, strong) NLHomeCarModel* currentCarModel; //当前显示车辆
 @property (nonatomic, strong) BMKUserLocation *currentLocation;     ///当前位置信息，作为起点
 @end
 
 @implementation NLMapViewController
-
+-(void)loadView{
+    [super loadView];
+    [self initcarCollectionView];
+    
+     [self downLoadCarData];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationController.navigationBar.hidden=YES;
- planPointCounts=0;
+    planPointCounts=0;
+    self.dataIndex=1;
     isShow=NO;
     manager=[AFHTTPSessionManager manager];
     manager.responseSerializer=[AFHTTPResponseSerializer serializer];
@@ -86,17 +90,18 @@
    // areaBtn=[UIButton normalBtnWithFrame:CGRectMake(80, 7, kScreenWidth-160, 30) title:@"豫A123451" size:14 color:[UIColor grayColor]  superView:bgView];
     numLabel=[[UILabel alloc] initWithFrame:CGRectMake(95, 7, kScreenWidth-80-120, 30)];
     numLabel.textColor=[UIColor grayColor];
-    numLabel.text=@"豫A123451";
+    numLabel.text=@"";
     numLabel.font=[UIFont systemFontOfSize:13];
     if (kScreenWidth>374) {
         numLabel.font=[UIFont systemFontOfSize:16];
     }
     [bgView addSubview:numLabel];
 
- #pragma mark 底部安全中心
-    safeBtn=[UIButton secondIconFontBtnWithFirst:@"\U0000e633" second:@"安全中心" titleColor:kBlueColor size1:35 size2:14 frame:CGRectMake(15, kScreenHeight-kiPhoneX_Bottom_Height-110, 60, 60) superView:mapView];
-    safeBtn.backgroundColor=[UIColor whiteColor];
-    [safeBtn addTarget:self action:@selector(safeClick:) forControlEvents:(UIControlEventTouchUpInside)];
+ #pragma mark 日期
+     NSString *timeStr=[DHHleper getLocalDate];
+    timeBtn=[UIButton oneIconFontBtnWithFirst:timeStr second:@"\U0000e69b" titleColor:[UIColor grayColor] size1:14 size2:14 frame:CGRectMake(0,CGRectGetMaxY(bgView.frame)+2, 120, 35) superView:mapView];
+    timeBtn.backgroundColor=[UIColor whiteColor];
+    [timeBtn addTarget:self action:@selector(chooseTime) forControlEvents:(UIControlEventTouchUpInside)];
 #pragma mark 日期选择
     dateBGView=[[UIView alloc] initWithFrame:CGRectMake(0, kScreenHeight-220-kiPhoneX_Bottom_Height, kScreenWidth, 220)];
     dateBGView.backgroundColor=kBGWhiteColor;
@@ -116,8 +121,29 @@
     [datePicker setDate:[NSDate date] animated:YES];
     datePicker.locale= [NSLocale localeWithLocaleIdentifier:@"zh"];
     [dateBGView addSubview:datePicker];
-    //
-
+  #pragma mark 锁车状态
+    NSString *iconStr,*nameStr;
+    UIColor *stateColor;
+    if ([self.currentCarModel.state isEqualToString:@"0"]) {
+        iconStr=@"\U0000e661";
+        nameStr=@"未锁";
+        stateColor=[UIColor greenColor];
+    }else if([self.currentCarModel.state isEqualToString:@"4"]){
+        iconStr=@"\U0000e640";
+        nameStr=@"报警";
+        stateColor=[UIColor redColor];
+    }else{
+        iconStr=@"\U0000e657";
+        nameStr=@"已锁";
+        stateColor=[UIColor redColor];
+    }
+   
+    lockBtn=[UIButton secondIconFontBtnWithFirst:iconStr second:nameStr titleColor:stateColor size1:30 size2:14 frame:CGRectMake(kScreenWidth-65, kScreenHeight-kiPhoneX_Bottom_Height-80, 60, 60) superView:mapView];
+  
+    lockBtn.layer.masksToBounds=YES;
+    [lockBtn addTarget:self action:@selector(lockClick) forControlEvents:(UIControlEventTouchUpInside)];
+    lockBtn.layer.cornerRadius=30;
+  
 #pragma mark 地图数组
     CLLocation *loca=[[CLLocation alloc] initWithLatitude:+34.81781978 longitude:+113.57227160];
     self.currentLocation=[[BMKUserLocation alloc] init];
@@ -127,30 +153,89 @@
     self.carLocationModelArray=[NSMutableArray array];
     self.carAnnotionArray=[NSMutableArray array];
     self.dataSource=[NSMutableArray array];
-    _startAnnotation=[[RouteAnnotation alloc] init];
-    _endAnnotation=[[RouteAnnotation alloc] init];
+      self.tableDataSoure=[NSMutableArray array];
+     self.messageSource=[[NSMutableArray alloc] init];
+  
     [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
     [self initLocationTableView];
+      [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:self.dataIndex];
     isMapView=YES;
-    [self initcarCollectionView];
-    [self downLoadData];
+    BOOL   isPush=[[[NSUserDefaults standardUserDefaults] objectForKey:@"actForPush"] boolValue];
+    if (!isPush) {
+        [self.messageSource removeAllObjects];
+        [self downMessageData];
+    }
     UIScreenEdgePanGestureRecognizer *leftEdgeGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(moveViewWithGesture:)];
     leftEdgeGesture.edges = UIRectEdgeLeft;// 屏幕左侧边缘响应
     [self.view addGestureRecognizer:leftEdgeGesture];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(Reactive) name:@"Reactive" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(Reactive) name:@"Warning" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(warning) name:@"Warning" object:nil];
+}
+-(void)warning{
+    isLogin=[[[NSUserDefaults standardUserDefaults] objectForKey:@"isLogin"] boolValue];
+    if (isLogin) {
+        userInfo=[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"];
+        [self.dataSource removeAllObjects];
+        [self.messageSource removeAllObjects];
+        [self downLoadCarData];
+    }
 }
 -(void)Reactive{
     isLogin=[[[NSUserDefaults standardUserDefaults] objectForKey:@"isLogin"] boolValue];
     if (isLogin) {
         userInfo=[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"];
         [self.dataSource removeAllObjects];
-        [self downLoadData];
-         [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
+        [self.tableDataSoure removeAllObjects];
+        [self downLoadCarData];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
+            [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:0];
+            BOOL   isPush=[[[NSUserDefaults standardUserDefaults] objectForKey:@"actForPush"] boolValue];
+            if (!isPush) {
+                [self.messageSource removeAllObjects];
+                [self downMessageData];
+            }
+        });
+      
     }
     
 }
-
+#pragma mark 下载消息数据
+-(void)downMessageData{
+    NSString *userid=userInfo[@"userid"];
+    
+    [manager GET:kGetPushMessageURL parameters:@{@"userid":userid} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (responseObject) {
+            NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
+            if ([resInfo isKindOfClass:[NSDictionary class]]) {
+                
+                NSString *resStr=resInfo[@"msg"];
+                if ([resStr isEqualToString:@"yes"]) {
+                    NSArray *resAry=resInfo[@"obj"];
+                    if (resAry.count>0) {
+                        for (NSDictionary*car in resAry) {
+                            NLMessageModel *model=[NLMessageModel yy_modelWithDictionary:car] ;
+                            
+                            [self.messageSource addObject:[DHHleper transNullMessagemodel:model]];
+                            
+                        }
+                        self.hidesBottomBarWhenPushed=YES;
+                        NLMessageViewController *mess=[[NLMessageViewController alloc] init];
+                        mess.inType=@"未读";
+                        mess.modelAry=self.messageSource;
+                        
+                        mess.callBackBlock = ^{
+                            
+                        };
+                        [self.navigationController pushViewController:mess animated:YES];
+                        self.hidesBottomBarWhenPushed=NO;
+                    }
+                }
+            }}
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        
+    }];
+}
 - (void)moveViewWithGesture:(UIPanGestureRecognizer *)panGes {
     if (panGes.state == UIGestureRecognizerStateEnded) {
         [KKSliderMenuTool showWithRootViewController:self contentViewController:[[NLMineViewController alloc] init]];
@@ -159,76 +244,7 @@
 -(void)userClick{
       [KKSliderMenuTool showWithRootViewController:self contentViewController:[[NLMineViewController alloc] init]];
 }
-#pragma mark 安全中心
--(void)safeClick:(UIButton*)btn{
-   width=(kScreenWidth-90)/3;
-     CGFloat hei=45+width+35;
-        [self initSafeView];
-        safeView.frame=CGRectMake(0, kScreenHeight-hei-kiPhoneX_Bottom_Height, kScreenWidth, hei);
-        [mapView addSubview:safeView];
-    
-}
--(void)closesafe{
-        __weak UIView *sv=safeView;
-      CGFloat hei=45+width+35;
-   // __weak UIButton *bu=safeBtn;
-    [UIView animateWithDuration:0.25 animations:^{
-        sv.frame=CGRectMake(-kScreenWidth, kScreenHeight-hei-kiPhoneX_Bottom_Height, kScreenWidth, hei);
-    } completion:^(BOOL finished) {
-        [sv removeFromSuperview];
-    }];
-}
--(void)initSafeView{
-    safeView=[[UIView alloc] init];
-    safeView.backgroundColor=[UIColor whiteColor];
-  
-  UILabel *titLabel=[[UILabel alloc] initWithFrame:CGRectMake(15, 10, 150, 25)];
-    titLabel.text=@"安全中心";
-    [safeView addSubview:titLabel];
-   UIButton *closeBtn=[UIButton iconButtonWithFrame:CGRectMake(kScreenWidth-40, 10, 25, 25) title:@"\U0000e61b" size:24 color:[UIColor blackColor] superView:safeView];
-    [closeBtn addTarget:self action:@selector(closesafe) forControlEvents:(UIControlEventTouchUpInside)];
-    
-    UIButton *timeBnt=[UIButton iconButtonWithFrame:CGRectMake(15, 45, width, width) title:@"\U0000e615" size:width/2 color:[UIColor whiteColor] superView:safeView];
-    timeBnt.backgroundColor=kBlueColor;
-    timeBnt.layer.masksToBounds=YES;
-    timeBnt.layer.cornerRadius=width/2;
-    [timeBnt addTarget:self action:@selector(chooseTime) forControlEvents:(UIControlEventTouchUpInside)];
-    UILabel *tlabel=[[UILabel alloc] initWithFrame:CGRectMake(15, CGRectGetMaxY(timeBnt.frame), width, 20)];
-    tlabel.textAlignment=NSTextAlignmentCenter;
-    tlabel.text=@"日期";
-    [safeView addSubview:tlabel];
-    
-   UIButton *policeBnt=[UIButton iconButtonWithFrame:CGRectMake(45+width, 45, width, width) title:@"\U0000e640" size:width/2 color:[UIColor whiteColor] superView:safeView];
-    policeBnt.backgroundColor=kBlueColor;
-    policeBnt.layer.masksToBounds=YES;
-    [policeBnt addTarget:self action:@selector(toPolice) forControlEvents:(UIControlEventTouchUpInside)];
-    policeBnt.layer.cornerRadius=width/2;
-    UILabel *plabel=[[UILabel alloc] initWithFrame:CGRectMake(45+width, CGRectGetMaxY(timeBnt.frame), width, 20)];
-    plabel.textAlignment=NSTextAlignmentCenter;
-    plabel.text=@"一键报警";
-    [safeView addSubview:plabel];
-    NSString *iconStr,*nameStr;
-    if ([self.currentCarModel.state isEqualToString:@"0"]) {
-        iconStr=@"\U0000e657";
-        nameStr=@"未锁";
-    }else if([self.currentCarModel.state isEqualToString:@"4"]){
-        iconStr=@"\U0000e657";
-        nameStr=@"已锁";
-    }else{
-        iconStr=@"\U0000e657";
-        nameStr=@"报警";
-    }
-    UIButton *lockBtn=[UIButton iconButtonWithFrame:CGRectMake(75+2*width, 45, width, width) title:iconStr size:width/2 color:[UIColor whiteColor] superView:safeView];
-    lockBtn.backgroundColor=kBlueColor;
-    lockBtn.layer.masksToBounds=YES;
-    [lockBtn addTarget:self action:@selector(lockClick) forControlEvents:(UIControlEventTouchUpInside)];
-    lockBtn.layer.cornerRadius=width/2;
-    UILabel *llabel=[[UILabel alloc] initWithFrame:CGRectMake(75+2*width, CGRectGetMaxY(timeBnt.frame), width, 20)];
-    llabel.textAlignment=NSTextAlignmentCenter;
-    llabel.text=nameStr;
-    [safeView addSubview:llabel];
-    
-}
+
 -(void)lockClick{
     if(self.currentCarModel.state.integerValue!=4) {
         [MBProgressHUD showMessag:@"修改中···" toView:self.view];
@@ -275,7 +291,7 @@
                         NSString *result=resInfo[@"result"];
                         if (result.integerValue==200) {
                             [self.dataSource removeAllObjects];
-                            [self downLoadData];
+                            [self downLoadCarData];
                         }
                         
                     }else{
@@ -311,7 +327,7 @@
     [carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
     [self.homeCollectionView setHidden:YES];
 }
--(void)downLoadData{
+-(void)downLoadCarData{
     
     NSString *phone=userInfo[@"phone"];
    // __weak typeof(self)weakself=self;
@@ -403,14 +419,28 @@
 #pragma mark 初始化车辆位置列表
 -(void)initLocationTableView{
     if (!self.locationTableView) {
-        self.locationTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(bgView.frame), kScreenWidth,  kScreenHeight-CGRectGetMaxY(bgView.frame)-kiPhoneX_Top_Height) style:(UITableViewStylePlain)];
+        self.locationTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(bgView.frame), kScreenWidth,  kScreenHeight-CGRectGetMaxY(bgView.frame)-64-kiPhoneX_Bottom_Height) style:(UITableViewStylePlain)];
         self.locationTableView.delegate=self;
         self.locationTableView.dataSource=self;
         self.locationTableView.backgroundColor=kBGWhiteColor;
         self.locationTableView.tableFooterView=[[UIView alloc] init];
-        [self.locationTableView registerNib:[UINib nibWithNibName:@"NLCarLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"NLCarLocationTableViewCell"];
+        [self.locationTableView registerNib:[UINib nibWithNibName:@"PSCarLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"PSCarLocationTableViewCell"];
         [self.locationTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+        MJRefreshAutoNormalFooter *footer=[MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
+        
+        [footer setTitle:MJRefreshAutoFooterIdleText forState:MJRefreshStateIdle];
+        [footer setTitle:@"正在加载更多记录..." forState:MJRefreshStateRefreshing];
+        [footer setTitle:@"---我的底线---" forState:MJRefreshStateNoMoreData];
+        footer.stateLabel.textColor=[UIColor grayColor];
+        self.locationTableView.mj_footer=footer;
+        [self.view addSubview:self.locationTableView];
+        self.locationTableView.hidden=YES;
     }
+}
+-(void)refresh{
+    NSDate *ddd=datePicker.date;
+    NSString *timeStr=[DHHleper transDateToString:ddd];
+    [self downLoadTableViewDataWithDate:timeStr index:self.dataIndex];
 }
 #pragma mark 初始化地图
 -(void)initMapView{
@@ -418,7 +448,7 @@
     mapView.delegate=self;
       mapView.showsUserLocation=YES;
     [self.view addSubview:mapView];
-    [[BMKLocationAuth sharedInstance] checkPermisionWithKey:@"kkPXXo5Ok4aGQSNtG6HchZGpZSjlc6ka" authDelegate:nil];
+    [[BMKLocationAuth sharedInstance] checkPermisionWithKey:@"uOWxXINBl36nqO34nunGHqmBteAcumOy" authDelegate:nil];
  
     _routesearch = [[BMKRouteSearch alloc]init];
     [mapView setZoomLevel:16];
@@ -441,7 +471,7 @@
 #pragma mark 地图绘线
 -(void)drawMapLineWithAry:(NSArray*)ary{
     CLLocationCoordinate2D coor[[ary count]];
-    [self.carLocationModelArray removeAllObjects];
+    
     if (ary.count>=2) {
         NSMutableArray *cllAry=[NSMutableArray array];
         
@@ -450,21 +480,21 @@
             NLCarLocationInfoModel *model=[DHHleper transNullmodel:[NLCarLocationInfoModel yy_modelWithDictionary:locDic]];
             [cllAry addObject:@{@"latitude":model.latitude,@"longitude":model.longitude}];
             RouteAnnotation *anno=[[RouteAnnotation alloc] init];
-            coor[i].latitude=model.latitude.doubleValue;
-            coor[i].longitude=model.longitude.doubleValue;
+            coor[i].latitude=model.latitude.floatValue+(float)(arc4random()%100) / 1000000;
+            coor[i].longitude=model.longitude.floatValue+(float)(arc4random()%100) / 1000000;
             anno.title=[NSString stringWithFormat:@"%@%@%@%@%@",model.province,model.city,model.prefecture,model.town,model.addr];
             anno.coordinate=coor[i];
             anno.type=3;
             if (i==0) {
-                _startAnnotation.type=2;
+                anno.type=2;
             }
             if (i==ary.count-1){
-                _endAnnotation.type=1;
+                anno.type=1;
             }
-            [self.carAnnotionArray addObject:_endAnnotation];
+            [self.carAnnotionArray addObject:anno];
             [self.carLocationModelArray addObject:model];
         }
-        if (ary.count>10) {//节点过多无法算路，直接显示节点
+        if (ary.count>12) {//节点过多无法算路，直接显示节点
             BMKPolyline* polyline = [BMKPolyline polylineWithCoordinates:coor count:ary.count];
             [mapView addOverlay:polyline];
             [mapView addAnnotations:self.carAnnotionArray];
@@ -472,10 +502,14 @@
             self.routesearch=[[BMKRouteSearch alloc] init];
             self.routesearch.delegate=self;
             BMKPlanNode* start = [[BMKPlanNode alloc]init];
-            start.pt=coor[0];
+            NLCarLocationInfoModel *model=self.carLocationModelArray[0];
+            CLLocationCoordinate2D startcoor=CLLocationCoordinate2DMake([model.latitude floatValue], [model.longitude floatValue]);
+            start.pt = startcoor;
             
             BMKPlanNode* end = [[BMKPlanNode alloc]init];
-            end.pt=coor[ary.count-1];
+            NLCarLocationInfoModel *model2=self.carLocationModelArray[ary.count-1];
+            CLLocationCoordinate2D endcoor=CLLocationCoordinate2DMake([model2.latitude floatValue], [model2.longitude floatValue]);
+            end.pt=endcoor;
             
             BMKDrivingRoutePlanOption *drivingRouteSearchOption = [[BMKDrivingRoutePlanOption alloc]init];
             drivingRouteSearchOption.from = start;
@@ -484,7 +518,9 @@
                 NSMutableArray *wayNodeAry=[NSMutableArray array];
                 for (int i=1; i<self.carLocationModelArray.count-1; i++) {
                     BMKPlanNode *Node = [[BMKPlanNode alloc] init];
-                    Node.pt=coor[i];
+                    NLCarLocationInfoModel *model3=self.carLocationModelArray[i];
+                    CLLocationCoordinate2D coors=CLLocationCoordinate2DMake([model3.latitude floatValue], [model3.longitude floatValue]);
+                    Node.pt=coors;
                     
                     [wayNodeAry addObject:Node];
                 }
@@ -492,9 +528,7 @@
             }
             drivingRouteSearchOption.drivingRequestTrafficType = BMK_DRIVING_REQUEST_TRAFFICE_TYPE_NONE;//不获取路况信息
             BOOL flag = [self.routesearch drivingSearch:drivingRouteSearchOption];
-            if(flag) {
-                DLog(@"car检索发送成功");
-            }else {
+            if(!flag) {
                 DLog(@"car检索发送失败");
             }
         }
@@ -516,7 +550,6 @@
         double centerlo=([resultDic[@"maxlongitude"]doubleValue]+[resultDic[@"minlongitude"]doubleValue])/2;
         CLLocationCoordinate2D center=CLLocationCoordinate2DMake(centerla,centerlo);
         [mapView setCenterCoordinate:center];
-        DLog(@"distance:%f,level:%d",distance,level);
         [mapView setZoomLevel:level];
     }else{
         NSDictionary *locDic=ary[0];
@@ -536,22 +569,25 @@
 
 #pragma mark 地图轨迹下载
 -(void)downLoadMapDataWithDate:(NSString*)date{
+  
     NSString *startTime=[date stringByAppendingString:@" 00:00:00"];
     NSString *endTime=[date stringByAppendingString:@" 23:59:59"];
     __weak BMKMapView *view=mapView;
-    NSDictionary *param=@{@"recordtimeendstart":startTime,@"recordtimeend":endTime,@"licensenum":self.carNum};
+    NSDictionary *param=@{@"recordtimeendstart":startTime,@"recordtimeend":endTime,@"licensenum":self.currentCarModel.licensenum};
     [MBProgressHUD showMessag:@"请求中···" toView:self.view];
-    [manager GET:kGetCarTrailURl parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager GET:kGetMapURL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (responseObject) {
-            NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
-            if (resInfo) {
+            NSArray *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
+            if ([resInfo isKindOfClass:[NSArray class]]) {
                 
-                NSArray *locationList=resInfo[@"list"];
+                //  NSArray *locationList=resInfo[@"list"];
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
-                if (locationList.count>0) {
+                if (resInfo.count>0) {
+                    [self.carLocationModelArray removeAllObjects];
+                    [self.carAnnotionArray removeAllObjects];
                     [view removeAnnotations:view.annotations];
                     [view removeOverlays:view.overlays];
-                    [self drawMapLineWithAry:locationList];
+                    [self drawMapLineWithAry:resInfo];
                     self.haveTrail=YES;
                     
                 }else{
@@ -562,9 +598,10 @@
                     [view updateLocationData:self.currentLocation];
                     [view setCenterCoordinate:(CLLocationCoordinate2DMake(self.currentLocation.location.coordinate.latitude, self.currentLocation.location.coordinate.longitude))];
                     [self.carLocationModelArray removeAllObjects];
+                    [self.carAnnotionArray removeAllObjects];
                     [MBProgressHUD showError:@"当天无车辆轨迹" toView:nil];
                 }
-                [self.locationTableView reloadData];
+                
             }else{
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
                 [MBProgressHUD showError:@"数据格式错误" toView:nil];
@@ -578,7 +615,56 @@
         [MBProgressHUD showError:@"网络错误，请检查网络是否正常" toView:nil];
     }];
 }
-
+#pragma mark 位置信息下载
+-(void)downLoadTableViewDataWithDate:(NSString*)date index:(int)index{
+    NSString *startTime=[date stringByAppendingString:@" 00:00:00"];
+    NSString *endTime=[date stringByAppendingString:@" 23:59:59"];
+    self.locationTableView.mj_footer.userInteractionEnabled=NO;
+    NSDictionary *param=@{@"recordtimeendstart":startTime,@"recordtimeend":endTime,@"licensenum":self.currentCarModel.licensenum,@"pageSize":@"20",@"current":@(index)};
+    // [MBProgressHUD showMessag:@"请求中···" toView:self.view];
+    [manager GET:kGetCarTrailURL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        if (responseObject) {
+            
+            self.locationTableView.mj_footer.userInteractionEnabled=YES;
+            NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
+            if ([resInfo isKindOfClass:[NSDictionary class]]) {
+                
+                NSArray *locationList=resInfo[@"list"];
+                //   [MBProgressHUD hideHUDForView:self.view animated:YES];
+                if (locationList.count>0) {
+                    [self.locationTableView.mj_footer endRefreshing];
+                    for (int i=0; i<locationList.count; i++) {
+                        NSDictionary *locDic=locationList[i];
+                       NLCarLocationInfoModel *model=[DHHleper transNullmodel:[NLCarLocationInfoModel yy_modelWithDictionary:locDic]];
+                        [self.tableDataSoure addObject:model];
+                        
+                    }
+                    self.dataIndex++;
+                    [self.locationTableView reloadData];
+                }else{
+                    if (index>1) {
+                        [self.locationTableView.mj_footer endRefreshingWithNoMoreData];
+                        [MBProgressHUD showError:@"没有更多轨迹了" toView:nil];
+                    }
+                }
+                
+            }else{
+                // [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [MBProgressHUD showError:@"数据格式错误" toView:nil];
+            }
+        }else{
+            [self.locationTableView.mj_footer endRefreshing];
+            self.locationTableView.mj_footer.userInteractionEnabled=YES;
+            // [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD showError:@"服务器无响应" toView:nil];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [self.locationTableView.mj_footer endRefreshing];
+        self.locationTableView.mj_footer.userInteractionEnabled=YES;
+        //   [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD showError:@"网络错误，请检查网络是否正常" toView:nil];
+    }];
+}
 #pragma mark - BMKLocationManagerDelegate
 - (void)BMKLocationManager:(BMKLocationManager *)manager didUpdateLocation:(BMKLocation *)location orError:(NSError *)error {
     if (error) {
@@ -605,27 +691,29 @@
     if ([annotation isKindOfClass:[RouteAnnotation class]]) {
         RouteAnnotation *anno=annotation;
         BMKAnnotationView *annotationView=[(RouteAnnotation*)anno getRouteAnnotationView:mapView];
-        if (anno.type==3||anno.type==2||anno.type==1) {
+        if (self.carAnnotionArray.count>2&&anno.type==3) {
             
             //此处加for循环 去找annotation对应的序号标题
-            for (int i=0; i<self.carLocationModelArray.count; i++) {
-                NLCarLocationInfoModel *model=self.carLocationModelArray[i];
-                CGFloat lat = model.latitude.floatValue;
-                CGFloat lng = model.longitude.floatValue;
+            for (int i=1; i<self.carAnnotionArray.count-1; i++) {
+                RouteAnnotation *ranno=self.carAnnotionArray[i];
+                CGFloat lat =ranno.coordinate.latitude;
+                CGFloat lng = ranno.coordinate.longitude;
                 //通过判断给相对应的标注添加序号标题
                 if(annotation.coordinate.latitude == lat && annotation.coordinate.longitude ==  lng )
                 {
-                    if (i>0&&i<self.carLocationModelArray.count-1) {
-                        //给不同的标注添加1，2，3，4，5这样的序号标题
-                        UILabel *la = [[UILabel alloc]initWithFrame:CGRectMake(0, -1, annotationView.frame.size.width,annotationView.frame.size.height-annotationView.frame.size.height*20/69)];
-                        la.backgroundColor = [UIColor clearColor];
-                        la.textColor=[UIColor whiteColor];
-                        la.font = [UIFont systemFontOfSize:12];
-                        la.textAlignment = NSTextAlignmentCenter;
-                        la.text = [NSString stringWithFormat:@"%d",i+1];
-                        
-                        [annotationView addSubview:la];
-                    }} }}
+                    //给不同的标注添加1，2，3，4，5这样的序号标题
+                    UILabel *la = [[UILabel alloc]initWithFrame:CGRectMake(0, -1, annotationView.frame.size.width,annotationView.frame.size.height-annotationView.frame.size.height*20/69)];
+                    la.backgroundColor = [UIColor clearColor];
+                    la.textColor=[UIColor whiteColor];
+                    la.font = [UIFont systemFontOfSize:12];
+                    la.textAlignment = NSTextAlignmentCenter;
+                    la.text = [NSString stringWithFormat:@"%d",i+1];
+                    
+                    [annotationView addSubview:la];
+                }
+            }
+            
+        }
         return annotationView;
     }
     return nil;
@@ -647,13 +735,13 @@
         BMKDrivingRouteLine* plan = (BMKDrivingRouteLine*)[result.routes objectAtIndex:0];
         
         NSInteger size = [plan.steps count];
-        
-        for (int i = 1; i < size-2; i++) {
+        for (int i = 1; i < size-1; i++) {
             BMKDrivingStep *tansitStep = [plan.steps objectAtIndex:i];
             
             RouteAnnotation* annotation = [[RouteAnnotation alloc]init];
             
             annotation.coordinate =  tansitStep.entrace.location; //路段入口信息
+            // DLog(@"%lf,%lf",annotation.coordinate.latitude,annotation.coordinate.longitude );
             annotation.type=5;
             
             annotation.degree=tansitStep.direction*30;
@@ -663,25 +751,10 @@
             //轨迹点总数累计
             planPointCounts += tansitStep.pointsCount;
         }
-        for (int i=0; i<self.carLocationModelArray.count; i++) {
-            NLCarLocationInfoModel *model=self.carLocationModelArray[i];
-            CGFloat lat = model.latitude.floatValue;
-            CGFloat lng = model.longitude.floatValue;
-            RouteAnnotation* annotation = [[RouteAnnotation alloc]init];
-            
-            annotation.coordinate = CLLocationCoordinate2DMake(lat, lng);
-            annotation.title = [NSString stringWithFormat:@"%@%@%@%@%@",model.province,model.city,model.prefecture,model.town,model.addr];
-            if (i==0) {
-                annotation.type=2;
-            }else if (i==self.carLocationModelArray.count-1){
-                annotation.type=1;
-            }else{
-                annotation.type=3;
-            }
-            
-            [mapView addAnnotation:annotation];
+        
+        if (self.carAnnotionArray.count>0) {
+            [mapView addAnnotations:self.carAnnotionArray];
         }
-        planPointCounts += self.carLocationModelArray.count;
         //轨迹点
         BMKMapPoint * temppoints = new BMKMapPoint[planPointCounts]; //文件后缀名改为mm
         int i = 0;
@@ -703,6 +776,7 @@
     }else{
         DLog(@"%u",error);
     }
+    
     
 }
 #pragma mark 位置获取
@@ -727,8 +801,8 @@
 }
 #pragma mark tableViewDelegate
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (self.carLocationModelArray.count>0) {
-           return self.carLocationModelArray.count;
+    if (self.tableDataSoure.count>0) {
+           return self.tableDataSoure.count;
     }else{
         return 1;
     }
@@ -736,8 +810,8 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=nil;
-    if (self.carLocationModelArray.count>0) {
-        NLCarLocationInfoModel *model=self.carLocationModelArray[indexPath.row];
+    if (self.tableDataSoure.count>0) {
+        NLCarLocationInfoModel *model=self.tableDataSoure[indexPath.row];
           NLCarLocationTableViewCell *llcell=[tableView dequeueReusableCellWithIdentifier:@"NLCarLocationTableViewCell" forIndexPath:indexPath];
         llcell.numLabel.text=[NSString stringWithFormat:@"序号：%ld",indexPath.row+1];
         llcell.infoLabel.text=model.addr;
@@ -758,12 +832,15 @@
     [dateBGView removeFromSuperview];
 }
 -(void)confimChoose{
-     [dateBGView removeFromSuperview];
+    [dateBGView removeFromSuperview];
     NSDate *ddd=datePicker.date;
     NSString *timeStr=[DHHleper transDateToString:ddd];
     [timeBtn setTitle:timeStr forState:(UIControlStateNormal)];
     [self downLoadMapDataWithDate:timeStr];
-    
+    [self.tableDataSoure removeAllObjects];
+    [self.locationTableView reloadData];
+    self.dataIndex=1;
+    [self downLoadTableViewDataWithDate:timeStr index:self.dataIndex];
 }
 -(void)toPolice{//报警
     NLCallPoliceViewController *call=[[NLCallPoliceViewController alloc] init];
@@ -814,15 +891,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     DLog(@"地图页释放");
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 //    UIButton *myLocBtn=[[UIButton alloc] initWithFrame:CGRectMake(0, kScreenHeight-30-64-kiPhoneX_Bottom_Height, kScreenWidth/2, 30)];
 //    [myLocBtn setTitle:@"我的位置" forState:(UIControlStateNormal)];
 //    myLocBtn.backgroundColor=kBlueColor;

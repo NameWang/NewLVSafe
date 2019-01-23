@@ -36,7 +36,7 @@
     // 要使用百度地图，请先启动BaiduMapManager
     BMKMapManager *mapManager = [[BMKMapManager alloc]init];
     // 如果要关注网络及授权验证事件，请设定     generalDelegate参数
-    BOOL ret = [mapManager start:@"kkPXXo5Ok4aGQSNtG6HchZGpZSjlc6ka"  generalDelegate:nil];
+    BOOL ret = [mapManager start:@"uOWxXINBl36nqO34nunGHqmBteAcumOy"  generalDelegate:nil];
     if (!ret) {
         NSLog(@"bmk manager start failed!");
     }
@@ -44,6 +44,7 @@
         NSDictionary* pushInfo = [launchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
         if (pushInfo)
         {
+              [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"actForPush"];
             [self showAlertWithNotiInfo:pushInfo];
         }
         
@@ -106,7 +107,7 @@
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler API_AVAILABLE(ios(10.0)){
     //这个方法是在用户点击了消息栏的通知，进入app后会来到这里。我们可以业务逻辑。比如跳转到相应的页面等。
     //处理推送过来的数据
-    
+      [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"actForPush"];
     //  [self handlePushMessage:response.notification.request.content.userInfo];
     [self showAlertWithNotiInfo:response.notification.request.content.userInfo];
     completionHandler();
@@ -121,7 +122,7 @@
      UIApplicationStateBackground 应用程序在后台，用户从通知中心点击消息将程序从后台调至前台
      UIApplicationStateInactive 用用程序处于关闭状态(不在前台也不在后台)，用户通过点击通知中心的消息将客户端从关闭状态调至前台
      */
-    
+      [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"actForPush"];
     //应用程序在前台给一个提示特别消息
     if (application.applicationState == UIApplicationStateActive) {
         //应用程序在前台
@@ -146,7 +147,7 @@
         
     }else{//车辆找到
         title=@"车辆已找到";
-        mess=[NSString stringWithFormat:@"\n车牌号:%@\n型号:%@\n颜色:%@\n时间:%@\n\n提醒:车辆已找到，请前往\"郑州市中原区西城科技大厦905\"认领您的车辆",body[@"licensenum"],body[@"type"],body[@"color"],body[@"pushtime"]];
+        mess=[NSString stringWithFormat:@"\n车牌号:%@\n型号:%@\n颜色:%@\n时间:%@\n\n提醒:车辆已找到，请前往附件安装点认领您的车辆",body[@"licensenum"],body[@"type"],body[@"color"],body[@"pushtime"]];
         
     }
     
@@ -170,17 +171,18 @@
     if (state.integerValue==3) {//预报警
         UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"取消预警" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
             [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+             [self httprequestWithDic:@{@"url":kCancelCallURL,@"licensenum":body[@"licensenum"],@"type":@"cancel"}];
         }];
         [alert addAction:cancel];
         UIAlertAction *confirm=[UIAlertAction actionWithTitle:@"确认报警" style:(UIAlertActionStyleDestructive) handler:^(UIAlertAction * _Nonnull action) {
             
             [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-            [self httprequestWithDic:@{@"licensenum":body[@"licensenum"]}];
+            [self httprequestWithDic:@{@"url":kCallpoliceURL,@"licensenum":body[@"licensenum"],@"type":@"call"}];
         }];
         [alert addAction:confirm];
     }else{
         UIAlertAction *ok=[UIAlertAction actionWithTitle:@"确定" style:(UIAlertActionStyleCancel) handler:^(UIAlertAction * _Nonnull action) {
-            
+             [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         }];
         [alert addAction:ok];
     }
@@ -188,10 +190,11 @@
     [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 }
 -(void)httprequestWithDic:(NSDictionary*)param{
+       [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"actForPush"];
     AFHTTPSessionManager *manager=[AFHTTPSessionManager manager];
     manager.responseSerializer=[AFHTTPResponseSerializer serializer];
     [MBProgressHUD showMessag:@"报警中···" toView:self.window.rootViewController.view];
-    [manager POST:kCallpoliceURL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:param[@"url"] parameters:@{@"licensenum":param[@"licensenum"]} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (responseObject) {
             NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
             //   NSString *resStr
@@ -199,8 +202,13 @@
                 NSString *result=resInfo[@"result"];
                 if (result.integerValue==200) {
                     [MBProgressHUD hideHUDForView:self.window.rootViewController.view animated:YES];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"Warning" object:nil];
-                    [MBProgressHUD showSuccess:@"您已经报警" toView:nil];
+                    if ([param[@"type"] isEqualToString:@"call"]) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"Warning" object:nil];
+                        [MBProgressHUD showSuccess:@"您已经报警" toView:nil];
+                    }else{
+                        [MBProgressHUD showSuccess:@"报警已取消" toView:nil];
+                    }
+                    
                 }
                 
             }else{

@@ -92,6 +92,31 @@
     }
     return model;
 }
++(NLMessageModel *)transNullMessagemodel:(NLMessageModel *)model{
+    //content,pushtime,title,state,licensenum,type,color
+    if (model.content==nil) {
+        model.content=@"";
+    }
+    if (model.pushtime==nil) {
+        model.pushtime=@"";
+    }
+    if (model.title==nil) {
+        model.title=@"";
+    }
+    if (model.state==nil) {
+        model.state=@"";
+    }
+    if (model.licensenum==nil) {
+        model.licensenum=@"";
+    }
+    if (model.type==nil) {
+        model.type=@"";
+    }
+    if (model.color==nil) {
+        model.color=@"";
+    }
+    return model;
+}
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
 {
     if (jsonString == nil) {

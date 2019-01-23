@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NLMessageViewController : NLMineBaseViewController
-
+@property(nonatomic,copy)NSString *inType;
+@property(nonatomic,strong)NSArray *modelAry;
 @end
 
 NS_ASSUME_NONNULL_END

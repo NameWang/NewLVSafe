@@ -50,7 +50,7 @@
 
 //http://47.94.228.184:1443/productimg/tupian01.png
 //192.168.124.8:8181
-#define url_header @"http://47.94.228.184:1443/electrocarmanage/"
+#define url_header @"http://192.168.124.8:8181/electrocarmanage/"
 #define iconimg_header @"http://47.94.228.184:2443/headimgurl/"
 #define carimg_header @"http://47.94.228.184:2443/img/"
 #define kGetMyCarListURL [NSString stringWithFormat:@"%@electrocar/applist",url_header]
@@ -63,11 +63,14 @@
 #define kRegistURL [NSString stringWithFormat:@"%@",url_header]
 #define kChangePWDURL [NSString stringWithFormat:@"%@sysmanager/pwd",url_header]
 #define kLockAUnlockCarURL [NSString stringWithFormat:@"%@electrocar/state",url_header]
-#define kGetCarTrailURl [NSString stringWithFormat:@"%@drivering/appdrivringrecord",url_header]
+//appdrivringrecord
+#define kGetCarTrailURL [NSString stringWithFormat:@"%@drivering/appdrivringrecord",url_header] //分页
+#define kGetMapURL [NSString stringWithFormat:@"%@drivering/apptrail",url_header] //不分页
 #define kUploadICONURl [NSString stringWithFormat:@"%@sysmanager/headimg",url_header]
 #define kGetPushMessageURL [NSString stringWithFormat:@"%@message/list",url_header]
 #define kDelPushMessageURL [NSString stringWithFormat:@"%@message/dels",url_header]
 #define kCallpoliceURL [NSString stringWithFormat:@"%@callpolice/iossave",url_header]
+#define kCancelCallURL [NSString stringWithFormat:@"%@callpolice/unsure",url_header]
 #define kCancelpoliceURL [NSString stringWithFormat:@"%@callpolice/cancel",url_header]
 #define kGetCodeURL [NSString stringWithFormat:@"%@sysmanager/code",url_header]
 #define kFindPWDURL [NSString stringWithFormat:@"%@sysmanager/findpwd",url_header]
