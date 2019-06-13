@@ -106,7 +106,7 @@
             [carcell showDataWithModel:model trailBlock:^{
                    self.hidesBottomBarWhenPushed=YES;
                 NLMapViewController *map=[[NLMapViewController alloc] init];
-                map.carNum=model.licenseNum;
+                map.carNum=model.licensenum;
                 map.callBackBlock = ^{
                   
                 };
@@ -118,14 +118,14 @@
             cell=carcell;
         }else{
             NLHomeCarModel *model=[[NLHomeCarModel alloc] init];
-            model.licenseNum=@"豫A12345";
+            model.licensenum=@"豫A12345";
             model.brand=@"法拉利";
-            model.picPath=@"http://cc.cocimg.com/api/uploads/181018/739edb962e633691b323b105fbe3fe6b.jpg";
+            model.picpath=@"http://cc.cocimg.com/api/uploads/181018/739edb962e633691b323b105fbe3fe6b.jpg";
             model.state=@"未锁";
             [carcell showDataWithModel:model trailBlock:^{
                 self.hidesBottomBarWhenPushed=YES;
                 NLMapViewController *map=[[NLMapViewController alloc] init];
-                map.carNum=model.licenseNum;
+                map.carNum=model.licensenum;
                 map.callBackBlock = ^{
                    
                 };

@@ -205,7 +205,7 @@
     }
     timeDown -=1;
 }
--(void)loginClick{//注册
+-(void)loginClick{//
     
     if (numField.text.length==11&&checkField.text.length==6&&pwdField.text.length>5&&pwdField.text.length<16) {
         [MBProgressHUD showMessag:@"请求中···" toView:self.view];

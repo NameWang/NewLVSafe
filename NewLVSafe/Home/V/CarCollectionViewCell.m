@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    [self.carBtn setTitle:@"\U0000e62a" forState:(UIControlStateNormal)];
+    [self.carBtn setTitle:@"\U0000e8c5" forState:(UIControlStateNormal)];
     self.carBtn.titleLabel.font=[UIFont fontWithName:@"iconfont" size:25];
     [self.carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
 }

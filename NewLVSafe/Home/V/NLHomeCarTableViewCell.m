@@ -26,9 +26,9 @@
 -(void)showDataWithModel:(NLHomeCarModel *)model trailBlock:(showTrailBolck)trailBlock lockCarBlock:(lockCarBlock)lockBlock{
     self.trailBlock = trailBlock;
     self.lockBlock = lockBlock;
-    [self.iconImgView sd_setImageWithURL:[NSURL URLWithString:model.picPath] placeholderImage:[UIImage imageNamed:@"car"]];
+    [self.iconImgView sd_setImageWithURL:[NSURL URLWithString:model.picpath] placeholderImage:[UIImage imageNamed:@"car"]];
     self.carNameLabel.text=model.brand;
-    self.carNumLabel.text=model.licenseNum;
+    self.carNumLabel.text=model.licensenum;
     //绘制曲线路径
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.trailBth.bounds byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGSizeMake(15, 15)];
     CAShapeLayer *maskLayer = [[CAShapeLayer alloc]init];

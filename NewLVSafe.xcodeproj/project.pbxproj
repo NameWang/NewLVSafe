@@ -15,7 +15,6 @@
 		2D20A81721941E5F00A4E110 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A81621941E5F00A4E110 /* main.m */; };
 		2D20A8E62194201200A4E110 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D20A87C2194201000A4E110 /* mapapi.bundle */; };
 		2D20A8E72194201200A4E110 /* DHHleper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A87D2194201000A4E110 /* DHHleper.m */; };
-		2D20A8E82194201200A4E110 /* MBProgressHUD+Add.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A87F2194201000A4E110 /* MBProgressHUD+Add.m */; };
 		2D20A8E92194201200A4E110 /* navigation.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D20A8802194201000A4E110 /* navigation.bundle */; };
 		2D20A8EA2194201200A4E110 /* RouteAnnotation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A8812194201000A4E110 /* RouteAnnotation.mm */; };
 		2D20A8EB2194201200A4E110 /* YSPhotoPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D20A8832194201000A4E110 /* YSPhotoPicker.m */; };
@@ -78,6 +77,7 @@
 		2D20A9312194216800A4E110 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9302194216800A4E110 /* libsqlite3.0.tbd */; };
 		2D20A9332194216E00A4E110 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9322194216E00A4E110 /* CoreMotion.framework */; };
 		2D55A05621F805CB001EFB45 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D55A05521F805CB001EFB45 /* iconfont.ttf */; };
+		2D5D533E22B0E70400CB0C43 /* MBProgressHUD+Add.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D5D533D22B0E70400CB0C43 /* MBProgressHUD+Add.m */; };
 		2D70C81421B0EB3B001657B2 /* CarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70C81221B0EB3B001657B2 /* CarCollectionViewCell.m */; };
 		2D70C81521B0EB3B001657B2 /* CarCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2D70C81321B0EB3B001657B2 /* CarCollectionViewCell.xib */; };
 		2D70C81721B11A06001657B2 /* loginbg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D70C81621B11A06001657B2 /* loginbg.png */; };
@@ -162,14 +162,12 @@
 		2D20A87C2194201000A4E110 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = mapapi.bundle; sourceTree = "<group>"; };
 		2D20A87D2194201000A4E110 /* DHHleper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DHHleper.m; sourceTree = "<group>"; };
 		2D20A87E2194201000A4E110 /* AvtionImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvtionImageView.h; sourceTree = "<group>"; };
-		2D20A87F2194201000A4E110 /* MBProgressHUD+Add.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+Add.m"; sourceTree = "<group>"; };
 		2D20A8802194201000A4E110 /* navigation.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = navigation.bundle; sourceTree = "<group>"; };
 		2D20A8812194201000A4E110 /* RouteAnnotation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RouteAnnotation.mm; sourceTree = "<group>"; };
 		2D20A8822194201000A4E110 /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
 		2D20A8832194201000A4E110 /* YSPhotoPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSPhotoPicker.m; sourceTree = "<group>"; };
 		2D20A8842194201000A4E110 /* DHHleper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DHHleper.h; sourceTree = "<group>"; };
 		2D20A8852194201000A4E110 /* AvtionImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvtionImageView.m; sourceTree = "<group>"; };
-		2D20A8862194201000A4E110 /* MBProgressHUD+Add.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+Add.h"; sourceTree = "<group>"; };
 		2D20A8892194201000A4E110 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		2D20A88A2194201000A4E110 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
 		2D20A88B2194201000A4E110 /* BaiduMapAPI_Utils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BaiduMapAPI_Utils.framework; sourceTree = "<group>"; };
@@ -235,6 +233,8 @@
 		2D20A9322194216E00A4E110 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		2D55A05521F805CB001EFB45 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		2D59CB3221B6658B000659B2 /* NewLVSafe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NewLVSafe.entitlements; sourceTree = "<group>"; };
+		2D5D533C22B0E70400CB0C43 /* MBProgressHUD+Add.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+Add.h"; sourceTree = "<group>"; };
+		2D5D533D22B0E70400CB0C43 /* MBProgressHUD+Add.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+Add.m"; sourceTree = "<group>"; };
 		2D70C81121B0EB3B001657B2 /* CarCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarCollectionViewCell.h; sourceTree = "<group>"; };
 		2D70C81221B0EB3B001657B2 /* CarCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CarCollectionViewCell.m; sourceTree = "<group>"; };
 		2D70C81321B0EB3B001657B2 /* CarCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CarCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -561,20 +561,20 @@
 		2D20A87A2194201000A4E110 /* PSTools */ = {
 			isa = PBXGroup;
 			children = (
+				2D5D533C22B0E70400CB0C43 /* MBProgressHUD+Add.h */,
+				2D5D533D22B0E70400CB0C43 /* MBProgressHUD+Add.m */,
 				2D70C82821B12BAA001657B2 /* XMTextView */,
 				2DCC1A0621AFDF5A00B5FC92 /* SliderMenu */,
 				2D20A87B2194201000A4E110 /* RouteAnnotation.h */,
 				2D20A87C2194201000A4E110 /* mapapi.bundle */,
 				2D20A87D2194201000A4E110 /* DHHleper.m */,
 				2D20A87E2194201000A4E110 /* AvtionImageView.h */,
-				2D20A87F2194201000A4E110 /* MBProgressHUD+Add.m */,
 				2D20A8802194201000A4E110 /* navigation.bundle */,
 				2D20A8812194201000A4E110 /* RouteAnnotation.mm */,
 				2D20A8822194201000A4E110 /* DBManager.h */,
 				2D20A8832194201000A4E110 /* YSPhotoPicker.m */,
 				2D20A8842194201000A4E110 /* DHHleper.h */,
 				2D20A8852194201000A4E110 /* AvtionImageView.m */,
-				2D20A8862194201000A4E110 /* MBProgressHUD+Add.h */,
 				2D20A8872194201000A4E110 /* BaiduMap_IOSSDK_Lib */,
 				2D20A8922194201000A4E110 /* fmdb */,
 				2D20A89D2194201000A4E110 /* DBManager.m */,
@@ -971,7 +971,6 @@
 				2D70C82321B123DF001657B2 /* FeedBackTableViewCell.m in Sources */,
 				2DCC19B721AFDEA800B5FC92 /* NLHomeCarModel.m in Sources */,
 				2DCC19C021AFDEB900B5FC92 /* NLFindCarViewController.m in Sources */,
-				2D20A8E82194201200A4E110 /* MBProgressHUD+Add.m in Sources */,
 				2D20A80C21941E4C00A4E110 /* ViewController.mm in Sources */,
 				2DCC19F321AFDEF200B5FC92 /* NLAboutUsViewController.m in Sources */,
 				2DCC19DB21AFDED900B5FC92 /* NLRegistOrForgetViewController.m in Sources */,
@@ -996,6 +995,7 @@
 				2D20A8E72194201200A4E110 /* DHHleper.m in Sources */,
 				2D70C81421B0EB3B001657B2 /* CarCollectionViewCell.m in Sources */,
 				2D20A80921941E4C00A4E110 /* AppDelegate.m in Sources */,
+				2D5D533E22B0E70400CB0C43 /* MBProgressHUD+Add.m in Sources */,
 				2DCC19D221AFDEC700B5FC92 /* NLFindCarTableViewCell.m in Sources */,
 				2DCC1A0021AFDF0000B5FC92 /* NLMessageTableViewCell.m in Sources */,
 				2DCC1A1421AFE99A00B5FC92 /* UIButton+custom.m in Sources */,

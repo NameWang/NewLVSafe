@@ -24,17 +24,16 @@
 /**
  * 屏幕适配--iPhoneX全系
  */
-#define kiPhoneXAll ([UIScreen mainScreen].bounds.size.height == 812 || [UIScreen mainScreen].bounds.size.height == 896)
 #define kScale ([UIScreen mainScreen].bounds.size.height > 600?1.5:1)
 /**
  * iPhoneX全系导航栏增加高度 (64->88)
  */
-#define kiPhoneX_Top_Height (([UIScreen mainScreen].bounds.size.height == 812 || [UIScreen mainScreen].bounds.size.height == 896)?24:0)
+#define kiPhoneX_Top_Height (((int)((kScreenHeight/kScreenWidth)*100) == 216)?24:0)
 
 /**
  * iPhoneX全系TabBar增加高度 (49->83)
  */
-#define kiPhoneX_Bottom_Height  (([UIScreen mainScreen].bounds.size.height == 812 || [UIScreen mainScreen].bounds.size.height == 896)?34:0)
+#define kiPhoneX_Bottom_Height (((int)((kScreenHeight/kScreenWidth)*100) == 216)?34:0)
 #define kBlueColor  [UIColor colorWithPatternImage:[UIImage imageNamed:@"blue"]]
 
 #import <SDWebImage/UIImageView+WebCache.h>
@@ -50,7 +49,7 @@
 
 //http://47.94.228.184:1443/productimg/tupian01.png
 //192.168.124.8:8181
-#define url_header @"http://192.168.124.8:8181/electrocarmanage/"
+#define url_header @"http://47.94.228.184:1443/electrocarmanage/"
 #define iconimg_header @"http://47.94.228.184:2443/headimgurl/"
 #define carimg_header @"http://47.94.228.184:2443/img/"
 #define kGetMyCarListURL [NSString stringWithFormat:@"%@electrocar/applist",url_header]

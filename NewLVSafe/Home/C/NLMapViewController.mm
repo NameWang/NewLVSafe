@@ -52,12 +52,7 @@
 @end
 
 @implementation NLMapViewController
--(void)loadView{
-    [super loadView];
-    [self initcarCollectionView];
-    
-     [self downLoadCarData];
-}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -73,15 +68,18 @@
     
     }
     self.view.backgroundColor=kBGWhiteColor;
+    
   [self initMapView];
     [self stopPopGestureRecognizer];
+  
+   [self initLocationTableView];
 #pragma mark 头部导航栏
     bgView=[[UIView alloc] initWithFrame:CGRectMake(0, 22+kiPhoneX_Top_Height, kScreenWidth, 44)];
     bgView.backgroundColor=[UIColor whiteColor];
     [mapView addSubview:bgView];
     userBtn=[UIButton iconButtonWithFrame:CGRectMake(15, 7, 30, 30) title:@"\U0000e61a" size:25 color:[UIColor grayColor]  superView:bgView];
     [userBtn addTarget:self action:@selector(userClick) forControlEvents:(UIControlEventTouchUpInside)];
-     carBtn=[UIButton iconButtonWithFrame:CGRectMake(60, 7, 30, 30) title:@"\U0000e61d" size:25 color:[UIColor grayColor]  superView:bgView];
+     carBtn=[UIButton iconButtonWithFrame:CGRectMake(60, 7, 30, 30) title:@"\U0000e8c5" size:25 color:[UIColor grayColor]  superView:bgView];
     [carBtn addTarget:self action:@selector(carlistClick) forControlEvents:(UIControlEventTouchUpInside)];
    notiBtn=[UIButton iconButtonWithFrame:CGRectMake(kScreenWidth-90, 7, 30, 30) title:@"\U0000e629" size:25 color:[UIColor grayColor]  superView:bgView];
     [notiBtn addTarget:self action:@selector(notiBtnClick) forControlEvents:(UIControlEventTouchUpInside)];
@@ -149,16 +147,18 @@
     self.currentLocation=[[BMKUserLocation alloc] init];
     self.currentLocation.location=loca;
     self.haveTrail=NO;
-    [self initMapView];
+  //  [self initMapView];
+      [self initcarCollectionView];
     self.carLocationModelArray=[NSMutableArray array];
     self.carAnnotionArray=[NSMutableArray array];
     self.dataSource=[NSMutableArray array];
       self.tableDataSoure=[NSMutableArray array];
      self.messageSource=[[NSMutableArray alloc] init];
   
-    [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
-    [self initLocationTableView];
-      [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:self.dataIndex];
+  //  [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
+ 
+ //     [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:self.dataIndex];
+       [self downLoadCarData];
     isMapView=YES;
     BOOL   isPush=[[[NSUserDefaults standardUserDefaults] objectForKey:@"actForPush"] boolValue];
     if (!isPush) {
@@ -188,8 +188,8 @@
         [self.tableDataSoure removeAllObjects];
         [self downLoadCarData];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
-            [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:0];
+         //   [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
+         //   [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:0];
             BOOL   isPush=[[[NSUserDefaults standardUserDefaults] objectForKey:@"actForPush"] boolValue];
             if (!isPush) {
                 [self.messageSource removeAllObjects];
@@ -244,7 +244,38 @@
 -(void)userClick{
       [KKSliderMenuTool showWithRootViewController:self contentViewController:[[NLMineViewController alloc] init]];
 }
-
+#pragma mark 重置锁车按钮状态
+-(void)resetLockBtnTitle{
+    NSString *iconStr,*nameStr;
+    UIColor *stateColor;
+    if ([self.currentCarModel.state isEqualToString:@"0"]) {
+        iconStr=@"\U0000e661";
+        nameStr=@"未锁";
+        stateColor=[UIColor greenColor];
+    }else if([self.currentCarModel.state isEqualToString:@"4"]){
+        iconStr=@"\U0000e640";
+        nameStr=@"报警";
+        stateColor=[UIColor redColor];
+    }else{
+        iconStr=@"\U0000e657";
+        nameStr=@"已锁";
+        stateColor=[UIColor redColor];
+    }
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@",iconStr,nameStr]];
+    NSRange range1 = [[str string] rangeOfString:iconStr];
+    NSRange range2 = [[str string] rangeOfString:nameStr];
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"ArialMT" size:14] range:range2];
+    
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"iconfont" size:30] range:range1];
+    [str addAttribute:NSForegroundColorAttributeName value:stateColor range:range2];
+    [str addAttribute:NSForegroundColorAttributeName value:stateColor range:range1];
+    [self->lockBtn setAttributedTitle:str forState:(UIControlStateNormal)];
+    self->lockBtn.titleLabel.lineBreakMode=NSLineBreakByWordWrapping;
+    
+    self->lockBtn.titleLabel.textAlignment=NSTextAlignmentCenter;
+    
+}
+#pragma mark 锁车解锁事件
 -(void)lockClick{
     if(self.currentCarModel.state.integerValue!=4) {
         [MBProgressHUD showMessag:@"修改中···" toView:self.view];
@@ -262,6 +293,7 @@
                             resModel.state=@"1";
                         }
                         self.currentCarModel=resModel;
+                        [self resetLockBtnTitle];
                         [MBProgressHUD hideHUDForView:self.view animated:YES];
                     }else{
                         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -312,21 +344,8 @@
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
-#pragma mark 车辆瀑布流
--(void)carlistClick{
-    if (isShow) {
-        [self hideCollect];
-    }else{
-        isShow=YES;
-        [carBtn setTitleColor:kBlueColor forState:(UIControlStateNormal)];
-        [self.homeCollectionView setHidden:NO];
-    }
-}
--(void)hideCollect{
-    isShow=NO;
-    [carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
-    [self.homeCollectionView setHidden:YES];
-}
+
+#pragma mark 下载车辆列表
 -(void)downLoadCarData{
     
     NSString *phone=userInfo[@"phone"];
@@ -348,11 +367,13 @@
                     if (i==0) {
                         label.text=model.licensenum;
                         self.currentCarModel=model;
+                        [self resetLockBtnTitle];
                     }
                 }
                    
                     [self.homeCollectionView reloadData];
-                    
+                     [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
+                     [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:self.dataIndex];
                 }
             }else{
                 
@@ -368,6 +389,22 @@
     }];
     
 }
+#pragma mark 车辆瀑布流
+-(void)carlistClick{
+    if (isShow) {
+        [self hideCollect];
+    }else{
+        isShow=YES;
+        [carBtn setTitleColor:kBlueColor forState:(UIControlStateNormal)];
+        [self.homeCollectionView setHidden:NO];
+    }
+}
+-(void)hideCollect{
+    isShow=NO;
+    [carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
+    [self.homeCollectionView setHidden:YES];
+    [self downLoadCarData];
+}
 -(void)initcarCollectionView{
     //
     UICollectionViewFlowLayout *flowLayout=[[UICollectionViewFlowLayout alloc] init];
@@ -381,13 +418,14 @@
     // 全局设置itemSize
     flowLayout.itemSize = CGSizeMake(90, 60);
     //新建
-    self.homeCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(15, CGRectGetMaxY(bgView.frame), kScreenWidth-30,60) collectionViewLayout:flowLayout];
+    self.homeCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(0, 67+kiPhoneX_Top_Height, kScreenWidth,60) collectionViewLayout:flowLayout];
     self.homeCollectionView.backgroundColor=kBGWhiteColor;
     self.homeCollectionView.delegate=self;
     self.homeCollectionView.dataSource=self;
     
     [self.homeCollectionView registerNib:[UINib nibWithNibName:@"CarCollectionViewCell" bundle:nil] forCellWithReuseIdentifier:@"CarCollectionViewCell"];
     [mapView addSubview:self.homeCollectionView];
+    self.homeCollectionView.hidden=YES;
 }
 #pragma mark 瀑布流代理
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
@@ -419,7 +457,7 @@
 #pragma mark 初始化车辆位置列表
 -(void)initLocationTableView{
     if (!self.locationTableView) {
-        self.locationTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(bgView.frame), kScreenWidth,  kScreenHeight-CGRectGetMaxY(bgView.frame)-64-kiPhoneX_Bottom_Height) style:(UITableViewStylePlain)];
+        self.locationTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, 67+kiPhoneX_Top_Height, kScreenWidth,  kScreenHeight-CGRectGetMaxY(bgView.frame)-64-kiPhoneX_Bottom_Height) style:(UITableViewStylePlain)];
         self.locationTableView.delegate=self;
         self.locationTableView.dataSource=self;
         self.locationTableView.backgroundColor=kBGWhiteColor;
@@ -428,7 +466,7 @@
         [self.locationTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
         MJRefreshAutoNormalFooter *footer=[MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
         
-        [footer setTitle:MJRefreshAutoFooterIdleText forState:MJRefreshStateIdle];
+        [footer setTitle:@"" forState:MJRefreshStateIdle];
         [footer setTitle:@"正在加载更多记录..." forState:MJRefreshStateRefreshing];
         [footer setTitle:@"---我的底线---" forState:MJRefreshStateNoMoreData];
         footer.stateLabel.textColor=[UIColor grayColor];
@@ -735,7 +773,7 @@
         BMKDrivingRouteLine* plan = (BMKDrivingRouteLine*)[result.routes objectAtIndex:0];
         
         NSInteger size = [plan.steps count];
-        for (int i = 1; i < size-1; i++) {
+        for (int i = 0; i < size; i++) {
             BMKDrivingStep *tansitStep = [plan.steps objectAtIndex:i];
             
             RouteAnnotation* annotation = [[RouteAnnotation alloc]init];
@@ -835,13 +873,27 @@
     [dateBGView removeFromSuperview];
     NSDate *ddd=datePicker.date;
     NSString *timeStr=[DHHleper transDateToString:ddd];
-    [timeBtn setTitle:timeStr forState:(UIControlStateNormal)];
+    // second:@"\U0000e69b" titleColor:[UIColor grayColor] size1:14 size2:14
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@%@",timeStr,@"\U0000e69b"]];
+    NSRange range1 = [[str string] rangeOfString:@"\U0000e69b"];
+     NSRange range2 = [[str string] rangeOfString:timeStr];
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"ArialMT" size:14] range:range2];
+   
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"iconfont" size:14] range:range1];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:range2];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor grayColor] range:range1];
+    [timeBtn setAttributedTitle:str forState:(UIControlStateNormal)];
+    timeBtn.titleLabel.lineBreakMode=NSLineBreakByWordWrapping;
+    
+    timeBtn.titleLabel.textAlignment=NSTextAlignmentCenter;
+   // [timeBtn setTitle:timeStr forState:(UIControlStateNormal)];
     [self downLoadMapDataWithDate:timeStr];
     [self.tableDataSoure removeAllObjects];
     [self.locationTableView reloadData];
     self.dataIndex=1;
     [self downLoadTableViewDataWithDate:timeStr index:self.dataIndex];
 }
+#pragma mark 报警事件
 -(void)toPolice{//报警
     NLCallPoliceViewController *call=[[NLCallPoliceViewController alloc] init];
     call.callBackBlock = ^{
@@ -849,19 +901,23 @@
     };
     [self.navigationController pushViewController:call animated:YES];
 }
+#pragma mark 轨迹列表显示与否
 -(void)rightBtnClick{//轨迹列表显示与否
     if (isMapView) {
         [listBtn setTitle:@"\U0000e63a" forState:(UIControlStateNormal)];
         
         isMapView=NO;
-        [self.view addSubview:self.locationTableView];
+     //   [self.view addSubview:self.locationTableView];
+        self.locationTableView.hidden=NO;
     }else{
           [listBtn setTitle:@"\U0000e677" forState:(UIControlStateNormal)];
         isMapView=YES;
-        [self.locationTableView removeFromSuperview];
+       // [self.locationTableView removeFromSuperview];
+          self.locationTableView.hidden=YES;
     }
   
 }
+#pragma mark 消息事件
 -(void)notiBtnClick{//消息
     NLMessageViewController *mess=[[NLMessageViewController alloc] init];
     mess.callBackBlock = ^{

@@ -117,6 +117,9 @@
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [textView  resignFirstResponder];
 }
+-(void)dealloc{
+    DLog(@"修改信息释放");
+}
 /*
  #pragma mark - Navigation
  

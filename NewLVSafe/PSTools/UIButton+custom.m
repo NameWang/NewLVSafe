@@ -53,7 +53,7 @@
     [str addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:range1];
     [str addAttribute:NSForegroundColorAttributeName value:color range:range2];
     [button setAttributedTitle:str forState:(UIControlStateNormal)];
-    button.titleLabel.lineBreakMode=0;
+    button.titleLabel.lineBreakMode=NSLineBreakByWordWrapping;
     button.titleLabel.textAlignment=NSTextAlignmentCenter;
     [button setTitleColor:color forState:(UIControlStateNormal)];
     [superView addSubview:button];

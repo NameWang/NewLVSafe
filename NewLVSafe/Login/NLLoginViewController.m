@@ -125,7 +125,7 @@
 #pragma mark 隐私政策相关
 -(void)privateURLClick{
     
-    NSURL *url = [NSURL URLWithString:@"https://www.baidu.com"];
+    NSURL *url = [NSURL URLWithString:@"http://47.94.228.184:2443/htm/index3.html"];
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
     safariVC.delegate = self;
     

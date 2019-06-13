@@ -69,6 +69,7 @@
         case 0:case 1:case 2:
         {
             nocell.accessoryType=UITableViewCellAccessoryNone;
+            nocell.bodyLabel.text=titleAry[indexPath.row];
         }
             break;
             

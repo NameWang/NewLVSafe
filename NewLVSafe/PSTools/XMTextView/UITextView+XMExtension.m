@@ -23,7 +23,14 @@ static char *changeLocation = "location";
     
     NSLog(@"swizzledDealloc");
     // 移除观察
-    [self removeObserver:self forKeyPath:@"font"];
+    
+    @try {
+         [self removeObserver:self forKeyPath:@"font"];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"多次删除了");
+    }
+ 
     //移除监听
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
