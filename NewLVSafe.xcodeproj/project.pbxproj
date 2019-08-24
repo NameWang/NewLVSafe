@@ -89,6 +89,8 @@
 		2D70C82721B12662001657B2 /* FeedBackModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70C82621B12662001657B2 /* FeedBackModel.m */; };
 		2D70C82D21B12BAA001657B2 /* UITextView+XMExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70C82B21B12BAA001657B2 /* UITextView+XMExtension.m */; };
 		2D70C82E21B12BAA001657B2 /* XMTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70C82C21B12BAA001657B2 /* XMTextView.m */; };
+		2D7B6832230B9EF900A10339 /* my_head@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B6830230B9EF900A10339 /* my_head@3x.png */; };
+		2D7B6833230B9EF900A10339 /* my_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B6831230B9EF900A10339 /* my_head@2x.png */; };
 		2DC7CCFD21B4C014000EC865 /* NLCallPoliceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC7CCFC21B4C014000EC865 /* NLCallPoliceViewController.m */; };
 		2DC7CD0021B4C088000EC865 /* UILabel+normal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC7CCFF21B4C088000EC865 /* UILabel+normal.m */; };
 		2DCC19B621AFDEA800B5FC92 /* NLCarLocationInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19B021AFDEA800B5FC92 /* NLCarLocationInfoModel.m */; };
@@ -253,6 +255,8 @@
 		2D70C82A21B12BAA001657B2 /* XMTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMTextView.h; sourceTree = "<group>"; };
 		2D70C82B21B12BAA001657B2 /* UITextView+XMExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+XMExtension.m"; sourceTree = "<group>"; };
 		2D70C82C21B12BAA001657B2 /* XMTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMTextView.m; sourceTree = "<group>"; };
+		2D7B6830230B9EF900A10339 /* my_head@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_head@3x.png"; sourceTree = "<group>"; };
+		2D7B6831230B9EF900A10339 /* my_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_head@2x.png"; sourceTree = "<group>"; };
 		2DC7CCFB21B4C014000EC865 /* NLCallPoliceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NLCallPoliceViewController.h; sourceTree = "<group>"; };
 		2DC7CCFC21B4C014000EC865 /* NLCallPoliceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NLCallPoliceViewController.m; sourceTree = "<group>"; };
 		2DC7CCFE21B4C088000EC865 /* UILabel+normal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+normal.h"; sourceTree = "<group>"; };
@@ -631,6 +635,8 @@
 		2D20A89F2194201100A4E110 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2D7B6831230B9EF900A10339 /* my_head@2x.png */,
+				2D7B6830230B9EF900A10339 /* my_head@3x.png */,
 				2D55A05521F805CB001EFB45 /* iconfont.ttf */,
 				2D70C81821B120A4001657B2 /* iconPlace.png */,
 				2D70C81621B11A06001657B2 /* loginbg.png */,
@@ -868,6 +874,7 @@
 				2D20A8E62194201200A4E110 /* mapapi.bundle in Resources */,
 				2D20A9002194201200A4E110 /* sky-h.png in Resources */,
 				2D20A91B2194201200A4E110 /* 640-1136@2x.png in Resources */,
+				2D7B6832230B9EF900A10339 /* my_head@3x.png in Resources */,
 				2D20A90F2194201200A4E110 /* icon@2x.png in Resources */,
 				2D20A8E92194201200A4E110 /* navigation.bundle in Resources */,
 				2D20A9142194201200A4E110 /* lightBlue.png in Resources */,
@@ -883,6 +890,7 @@
 				2D20A9132194201200A4E110 /* home-s.png in Resources */,
 				2D20A9162194201200A4E110 /* 640-960@2x.png in Resources */,
 				2D20A81121941E5F00A4E110 /* Assets.xcassets in Resources */,
+				2D7B6833230B9EF900A10339 /* my_head@2x.png in Resources */,
 				2D20A90D2194201200A4E110 /* icon.png in Resources */,
 				2DCC1A0421AFDF0000B5FC92 /* NLMineTableViewCell.xib in Resources */,
 				2DCC19CF21AFDEC700B5FC92 /* NLHomeCarTableViewCell.xib in Resources */,
@@ -1177,7 +1185,6 @@
 			baseConfigurationReference = 911ED30D65343DDEB37E93B1 /* Pods-NewLVSafe.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = NewLVSafe/NewLVSafe.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Y4CV8HZ5T;
@@ -1207,7 +1214,6 @@
 			baseConfigurationReference = B640E708FA40981FAE4F7693 /* Pods-NewLVSafe.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = NewLVSafe/NewLVSafe.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9Y4CV8HZ5T;

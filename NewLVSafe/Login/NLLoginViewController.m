@@ -39,8 +39,8 @@
     [bgScrollView addSubview:imgBgView];
   
     //
-    logoImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 100, kScreenWidth, 80)];
-    logoImgView.image=[UIImage imageNamed:@"logo"];
+    logoImgView=[[UIImageView alloc] initWithFrame:CGRectMake(self.view.center.x-50, 100, 100, 100)];
+    logoImgView.image=[UIImage imageNamed:@"icon"];
     [imgBgView addSubview:logoImgView];
     //
     numField=[[UITextField alloc] initWithFrame:CGRectMake(40, CGRectGetMaxY(logoImgView.frame)+100*kScale, kScreenWidth-80, 30*kScale)];
@@ -125,7 +125,7 @@
 #pragma mark 隐私政策相关
 -(void)privateURLClick{
     
-    NSURL *url = [NSURL URLWithString:@"http://47.94.228.184:2443/htm/index3.html"];
+    NSURL *url = [NSURL URLWithString:@"http://47.105.68.191:8081"];
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
     safariVC.delegate = self;
     

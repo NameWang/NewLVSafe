@@ -300,7 +300,7 @@
 #pragma mark 隐私政策相关
 -(void)privateURLClick{
     
-    NSURL *url = [NSURL URLWithString:@"http://47.94.228.184:2443/htm/index3.html"];
+    NSURL *url = [NSURL URLWithString:@"http://47.105.68.191:8081"];
     SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
     safariVC.delegate = self;
     

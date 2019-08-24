@@ -13,16 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    [self.carBtn setTitle:@"\U0000e8c5" forState:(UIControlStateNormal)];
-    self.carBtn.titleLabel.font=[UIFont fontWithName:@"iconfont" size:25];
-    [self.carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
+    //self.backgroundColor=[UIColor colorWithWhite:0.92 alpha:1];
 }
--(void)showcarlist:(choseBolck)choseBolck{
-    self.choseBolck=choseBolck;
-}
-- (IBAction)carClick:(UIButton *)sender {
-    if (self.choseBolck) {
-        self.choseBolck();
-    }
-}
+
 @end

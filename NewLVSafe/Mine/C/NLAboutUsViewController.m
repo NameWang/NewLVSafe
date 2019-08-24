@@ -20,8 +20,8 @@
     self.title=@"关于我们";
     self.view.backgroundColor=kBGWhiteColor;
     [self addLeftItemWithImageName:@"leftbackicon_white_titlebar_24x24_@2x"];
-    UIImageView *logoImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 40, kScreenWidth, 70)];
-    logoImgView.image=[UIImage imageNamed:@"logo"];
+    UIImageView *logoImgView=[[UIImageView alloc] initWithFrame:CGRectMake(self.view.center.x-35, 40, 70, 70)];
+    logoImgView.image=[UIImage imageNamed:@"icon"];
     [self.view addSubview:logoImgView];
     UILabel *versionLabel=[[UILabel alloc] initWithFrame:CGRectMake(50, CGRectGetMaxY(logoImgView.frame)+50, kScreenWidth-100, 20)];
     versionLabel.textColor=[UIColor grayColor];
@@ -39,7 +39,7 @@
     titLabel.userInteractionEnabled=YES;
     [contactView addSubview:titLabel];
     UILabel *numLabel=[[UILabel alloc] initWithFrame:CGRectMake(kScreenWidth-120*kScale-15, 2, 120*kScale, 26*kScale)];
-    numLabel.text=@"13393732159";
+    numLabel.text=@"15555557954";
     numLabel.textAlignment=NSTextAlignmentRight;
     numLabel.textColor=[UIColor grayColor];
     numLabel.font=[UIFont systemFontOfSize:13*kScale];
@@ -48,7 +48,7 @@
     UILabel *copyRight=[[UILabel alloc] initWithFrame:CGRectMake(0, kScreenHeight-30*kScale-kiPhoneX_Bottom_Height-64, kScreenWidth, 20*kScale)];
     copyRight.textAlignment=NSTextAlignmentCenter;
     copyRight.font=[UIFont systemFontOfSize:12*kScale];
-    copyRight.text=@"乐沃实业©www.lovai.com";
+    copyRight.text=@"政放车卫士";
     [self.view addSubview:copyRight];
 }
 -(void)contactUS{

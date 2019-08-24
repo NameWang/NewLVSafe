@@ -49,9 +49,10 @@
 
 //http://47.94.228.184:1443/productimg/tupian01.png
 //192.168.124.8:8181
-#define url_header @"http://47.94.228.184:1443/electrocarmanage/"
-#define iconimg_header @"http://47.94.228.184:2443/headimgurl/"
-#define carimg_header @"http://47.94.228.184:2443/img/"
+
+#define url_header @"http://47.105.68.191:1443/electrocarmanage/"
+#define iconimg_header @"http://47.105.68.191:2443/headimgurl/"
+#define carimg_header @"http://47.105.68.191:2443/img/"
 #define kGetMyCarListURL [NSString stringWithFormat:@"%@electrocar/applist",url_header]
 #define kGetFindingCarURL [NSString stringWithFormat:@"%@",url_header]
 #define kGetFoundCarURL [NSString stringWithFormat:@"%@",url_header]

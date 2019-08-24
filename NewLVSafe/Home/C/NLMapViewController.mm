@@ -83,7 +83,7 @@
     [carBtn addTarget:self action:@selector(carlistClick) forControlEvents:(UIControlEventTouchUpInside)];
    notiBtn=[UIButton iconButtonWithFrame:CGRectMake(kScreenWidth-90, 7, 30, 30) title:@"\U0000e629" size:25 color:[UIColor grayColor]  superView:bgView];
     [notiBtn addTarget:self action:@selector(notiBtnClick) forControlEvents:(UIControlEventTouchUpInside)];
-   listBtn=[UIButton iconButtonWithFrame:CGRectMake(kScreenWidth-45, 7, 30, 30) title:@"\U0000e677" size:25 color:[UIColor grayColor]  superView:bgView];
+   listBtn=[UIButton normalBtnWithFrame:CGRectMake(kScreenWidth-45, 7, 40, 30) title:@"列表" size:15 color:[UIColor grayColor]  superView:bgView];
      [listBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:(UIControlEventTouchUpInside)];
    // areaBtn=[UIButton normalBtnWithFrame:CGRectMake(80, 7, kScreenWidth-160, 30) title:@"豫A123451" size:14 color:[UIColor grayColor]  superView:bgView];
     numLabel=[[UILabel alloc] initWithFrame:CGRectMake(95, 7, kScreenWidth-80-120, 30)];
@@ -101,19 +101,19 @@
     timeBtn.backgroundColor=[UIColor whiteColor];
     [timeBtn addTarget:self action:@selector(chooseTime) forControlEvents:(UIControlEventTouchUpInside)];
 #pragma mark 日期选择
-    dateBGView=[[UIView alloc] initWithFrame:CGRectMake(0, kScreenHeight-220-kiPhoneX_Bottom_Height, kScreenWidth, 220)];
+    dateBGView=[[UIView alloc] initWithFrame:CGRectMake(0, kScreenHeight-225-kiPhoneX_Bottom_Height, kScreenWidth, 225)];
     dateBGView.backgroundColor=kBGWhiteColor;
-    cancelBtn=[[UIButton alloc] initWithFrame:CGRectMake(10, 0, 40, 20)];
+    cancelBtn=[[UIButton alloc] initWithFrame:CGRectMake(10, 5, 40, 20)];
     [cancelBtn setTitle:@"取消" forState:(UIControlStateNormal)];
     [cancelBtn setTitleColor:kBlueColor forState:(UIControlStateNormal)];
     [cancelBtn addTarget:self action:@selector(cancelChoose) forControlEvents:(UIControlEventTouchUpInside)];
     [dateBGView addSubview:cancelBtn];
-    okBtn=[[UIButton alloc] initWithFrame:CGRectMake(kScreenWidth-50, 0, 40, 20)];
+    okBtn=[[UIButton alloc] initWithFrame:CGRectMake(kScreenWidth-50, 5, 40, 20)];
     [okBtn setTitle:@"确定" forState:(UIControlStateNormal)];
     [okBtn setTitleColor:kBlueColor forState:(UIControlStateNormal)];
     [okBtn addTarget:self action:@selector(confimChoose) forControlEvents:(UIControlEventTouchUpInside)];
     [dateBGView addSubview:okBtn];
-    datePicker=[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 20, kScreenWidth, 200)];
+    datePicker=[[UIDatePicker alloc] initWithFrame:CGRectMake(0, 25, kScreenWidth, 200)];
     datePicker.datePickerMode=UIDatePickerModeDate;
     datePicker.maximumDate=[NSDate date];
     [datePicker setDate:[NSDate date] animated:YES];
@@ -125,7 +125,7 @@
     if ([self.currentCarModel.state isEqualToString:@"0"]) {
         iconStr=@"\U0000e661";
         nameStr=@"未锁";
-        stateColor=[UIColor greenColor];
+        stateColor= [UIColor colorWithRed:50.0/255.0 green:205.0/255.0 blue:50/255.0 alpha:1];
     }else if([self.currentCarModel.state isEqualToString:@"4"]){
         iconStr=@"\U0000e640";
         nameStr=@"报警";
@@ -136,7 +136,7 @@
         stateColor=[UIColor redColor];
     }
    
-    lockBtn=[UIButton secondIconFontBtnWithFirst:iconStr second:nameStr titleColor:stateColor size1:30 size2:14 frame:CGRectMake(kScreenWidth-65, kScreenHeight-kiPhoneX_Bottom_Height-80, 60, 60) superView:mapView];
+    lockBtn=[UIButton secondIconFontBtnWithFirst:iconStr second:nameStr titleColor:stateColor size1:45 size2:14 frame:CGRectMake(kScreenWidth-85, kScreenHeight-kiPhoneX_Bottom_Height-100, 80, 80) superView:mapView];
   
     lockBtn.layer.masksToBounds=YES;
     [lockBtn addTarget:self action:@selector(lockClick) forControlEvents:(UIControlEventTouchUpInside)];
@@ -251,7 +251,7 @@
     if ([self.currentCarModel.state isEqualToString:@"0"]) {
         iconStr=@"\U0000e661";
         nameStr=@"未锁";
-        stateColor=[UIColor greenColor];
+        stateColor= [UIColor colorWithRed:50.0/255.0 green:205.0/255.0 blue:50/255.0 alpha:1];
     }else if([self.currentCarModel.state isEqualToString:@"4"]){
         iconStr=@"\U0000e640";
         nameStr=@"报警";
@@ -266,7 +266,7 @@
     NSRange range2 = [[str string] rangeOfString:nameStr];
     [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"ArialMT" size:14] range:range2];
     
-    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"iconfont" size:30] range:range1];
+    [str addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"iconfont" size:45] range:range1];
     [str addAttribute:NSForegroundColorAttributeName value:stateColor range:range2];
     [str addAttribute:NSForegroundColorAttributeName value:stateColor range:range1];
     [self->lockBtn setAttributedTitle:str forState:(UIControlStateNormal)];
@@ -403,7 +403,11 @@
     isShow=NO;
     [carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
     [self.homeCollectionView setHidden:YES];
-    [self downLoadCarData];
+    [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
+    self.dataIndex=1;
+    [self.tableDataSoure removeAllObjects];
+     [self.locationTableView reloadData];
+    [self downLoadTableViewDataWithDate:[DHHleper getLocalDate] index:self.dataIndex];
 }
 -(void)initcarCollectionView{
     //
@@ -416,9 +420,9 @@
     // 设置item之间间距
     flowLayout.minimumInteritemSpacing=7.5;
     // 全局设置itemSize
-    flowLayout.itemSize = CGSizeMake(90, 60);
+    flowLayout.itemSize = CGSizeMake(160, 140);
     //新建
-    self.homeCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(0, 67+kiPhoneX_Top_Height, kScreenWidth,60) collectionViewLayout:flowLayout];
+    self.homeCollectionView=[[UICollectionView alloc] initWithFrame:CGRectMake(0, 67+kiPhoneX_Top_Height, kScreenWidth,140) collectionViewLayout:flowLayout];
     self.homeCollectionView.backgroundColor=kBGWhiteColor;
     self.homeCollectionView.delegate=self;
     self.homeCollectionView.dataSource=self;
@@ -433,15 +437,11 @@
 }
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{__weak UILabel *lll=numLabel;
+{
     CarCollectionViewCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"CarCollectionViewCell" forIndexPath:indexPath];
     NLHomeCarModel *model=self.dataSource[indexPath.row];
     cell.nameLabel.text=model.licensenum;
-    [cell showcarlist:^{
-        lll.text=model.licensenum;
-        self.currentCarModel=model;
-        [self hideCollect];
-    }];
+    [cell.carImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",carimg_header,model.picpath]] placeholderImage:[UIImage imageNamed:@"car"]];
     return cell;
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -462,7 +462,7 @@
         self.locationTableView.dataSource=self;
         self.locationTableView.backgroundColor=kBGWhiteColor;
         self.locationTableView.tableFooterView=[[UIView alloc] init];
-        [self.locationTableView registerNib:[UINib nibWithNibName:@"PSCarLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"PSCarLocationTableViewCell"];
+        [self.locationTableView registerNib:[UINib nibWithNibName:@"NLCarLocationTableViewCell" bundle:nil] forCellReuseIdentifier:@"NLCarLocationTableViewCell"];
         [self.locationTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
         MJRefreshAutoNormalFooter *footer=[MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
         
@@ -607,7 +607,7 @@
 
 #pragma mark 地图轨迹下载
 -(void)downLoadMapDataWithDate:(NSString*)date{
-  
+    DLog(@"下载车辆%@的地图数据",self.currentCarModel.licensenum);
     NSString *startTime=[date stringByAppendingString:@" 00:00:00"];
     NSString *endTime=[date stringByAppendingString:@" 23:59:59"];
     __weak BMKMapView *view=mapView;
@@ -680,6 +680,7 @@
                     self.dataIndex++;
                     [self.locationTableView reloadData];
                 }else{
+                   
                     if (index>1) {
                         [self.locationTableView.mj_footer endRefreshingWithNoMoreData];
                         [MBProgressHUD showError:@"没有更多轨迹了" toView:nil];
@@ -853,6 +854,7 @@
           NLCarLocationTableViewCell *llcell=[tableView dequeueReusableCellWithIdentifier:@"NLCarLocationTableViewCell" forIndexPath:indexPath];
         llcell.numLabel.text=[NSString stringWithFormat:@"序号：%ld",indexPath.row+1];
         llcell.infoLabel.text=model.addr;
+        llcell.timeLabel.text=model.recordtime;
         cell=llcell;
     }else{
         UITableViewCell *nocell=[tableView dequeueReusableCellWithIdentifier:@"cell"];
@@ -904,13 +906,13 @@
 #pragma mark 轨迹列表显示与否
 -(void)rightBtnClick{//轨迹列表显示与否
     if (isMapView) {
-        [listBtn setTitle:@"\U0000e63a" forState:(UIControlStateNormal)];
+        [listBtn setTitle:@"地图" forState:(UIControlStateNormal)];
         
         isMapView=NO;
      //   [self.view addSubview:self.locationTableView];
         self.locationTableView.hidden=NO;
     }else{
-          [listBtn setTitle:@"\U0000e677" forState:(UIControlStateNormal)];
+          [listBtn setTitle:@"列表" forState:(UIControlStateNormal)];
         isMapView=YES;
        // [self.locationTableView removeFromSuperview];
           self.locationTableView.hidden=YES;

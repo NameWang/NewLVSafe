@@ -14,7 +14,7 @@
 #import "NLMessageViewController.h"
 #import "UserInfoViewController.h"
 #import "YSPhotoPicker.h"
-#import "NLFeedBackViewController.h"
+//#import "NLFeedBackViewController.h"
 #import "NLMapViewController.h"
 
 @interface NLMineViewController ()<UITableViewDelegate,UITableViewDataSource,YSPhotoPickerDelegate>
@@ -50,9 +50,9 @@
         width = width - 25;
     }
    userInfo=[[NSUserDefaults standardUserDefaults] objectForKey:@"UserInfo"];
-  
-    dataSource=[NSMutableArray arrayWithObjects:@"\U0000e60d",@"\U0000e65f",@"\U0000e63d",@"\U0000e639", nil];
-    titleAry=[NSMutableArray arrayWithObjects:@"个人信息",@"关于我们",@"帮助与反馈",@"设置", nil];
+  //@"帮助与反馈",@"\U0000e63d",
+    dataSource=[NSMutableArray arrayWithObjects:@"\U0000e60d",@"\U0000e65f",@"\U0000e639", nil];
+    titleAry=[NSMutableArray arrayWithObjects:@"个人信息",@"关于我们",@"设置", nil];
     [self initTopView];
     
 }
@@ -72,11 +72,10 @@
     iconImgView.layer.mask = maskLayer;
     [iconImgView addTarget:self action:@selector(changeClick)];
     
-    iconImgView.image=[UIImage imageNamed:@"iconPlace"];
-    
+     [iconImgView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",iconimg_header,userInfo[@"headimgurl"]]] placeholderImage:[UIImage imageNamed:@"my_head"]];
     [topView addSubview:iconImgView];
     nameLabel=[[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetMaxY(iconImgView.frame)+10, width, 25)];
-    nameLabel.text=userInfo[@"uname"];
+    nameLabel.text=userInfo[@"sname"];
       nameLabel.font=[UIFont systemFontOfSize:15];
     nameLabel.textAlignment=NSTextAlignmentCenter;
     [topView addSubview:nameLabel];
@@ -101,7 +100,7 @@
     
 }
 -(void)initTableView{
-    mineTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(topView.frame)+2, width, 44*4*kScale) style:(UITableViewStylePlain)];
+    mineTableView=[[UITableView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(topView.frame)+2, width, 44*3*kScale) style:(UITableViewStylePlain)];
     [mineTableView registerNib:[UINib nibWithNibName:@"NLMineTableViewCell" bundle:nil] forCellReuseIdentifier:@"NLMineTableViewCell"];
   
     
@@ -109,7 +108,7 @@
     mineTableView.dataSource=self;
     mineTableView.tableFooterView=[[UIView alloc] init];
     [self.view addSubview:mineTableView];
-    quitBtn=[UIButton normalBtnWithFrame:CGRectMake(10, CGRectGetMaxY(mineTableView.frame)+20, width-20, 30*kScale) title:@"退出登录" size:15 color:[UIColor whiteColor] superView:self.view];
+    quitBtn=[UIButton normalBtnWithFrame:CGRectMake(10, CGRectGetMaxY(mineTableView.frame)+20, width-20, 30*kScale) title:@"退出登录" size:17 color:[UIColor whiteColor] superView:self.view];
     quitBtn.backgroundColor=kBlueColor;
     [quitBtn addTarget:self action:@selector(quitClick) forControlEvents:(UIControlEventTouchUpInside)];
 }
@@ -147,19 +146,19 @@
                 
             }
             break;
-        case 2:
-        {
-            
-            NLFeedBackViewController *info=[[NLFeedBackViewController alloc] init];
-            info.callBackBlock = ^{
-                
-            };
-            [self.navigationController pushViewController:info animated:YES];
-            
-            
-        }
-            break;
-        case 3:{
+//        case 2:
+//        {
+//
+//            NLFeedBackViewController *info=[[NLFeedBackViewController alloc] init];
+//            info.callBackBlock = ^{
+//
+//            };
+//            [self.navigationController pushViewController:info animated:YES];
+//
+//
+//        }
+//            break;
+        case 2:{
            
             NLSetupViewController *us=[[NLSetupViewController alloc] init];
        
