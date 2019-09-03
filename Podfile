@@ -14,6 +14,6 @@ pod 'MJExtension'
 pod 'MBProgressHUD'
 pod 'MJRefresh'
 pod 'YYModel'
-
+pod 'JPush'
   
 end

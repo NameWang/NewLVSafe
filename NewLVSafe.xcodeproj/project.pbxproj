@@ -73,7 +73,6 @@
 		2D20A9292194213C00A4E110 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9282194213C00A4E110 /* CoreGraphics.framework */; };
 		2D20A92B2194214600A4E110 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A92A2194214600A4E110 /* Security.framework */; };
 		2D20A92D2194214C00A4E110 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A92C2194214C00A4E110 /* CoreTelephony.framework */; };
-		2D20A92F2194215A00A4E110 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A92E2194215A00A4E110 /* libc++.tbd */; };
 		2D20A9312194216800A4E110 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9302194216800A4E110 /* libsqlite3.0.tbd */; };
 		2D20A9332194216E00A4E110 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A9322194216E00A4E110 /* CoreMotion.framework */; };
 		2D55A05621F805CB001EFB45 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D55A05521F805CB001EFB45 /* iconfont.ttf */; };
@@ -91,6 +90,9 @@
 		2D70C82E21B12BAA001657B2 /* XMTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70C82C21B12BAA001657B2 /* XMTextView.m */; };
 		2D7B6832230B9EF900A10339 /* my_head@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B6830230B9EF900A10339 /* my_head@3x.png */; };
 		2D7B6833230B9EF900A10339 /* my_head@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D7B6831230B9EF900A10339 /* my_head@2x.png */; };
+		2D958597231CC87D0056CABF /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D20A92E2194215A00A4E110 /* libc++.tbd */; };
+		2D9D8B39231DEC7900FC56DD /* sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2D9D8B38231DEC7900FC56DD /* sound.wav */; };
+		2DAFE22B2311406400DC687E /* icon80.png in Resources */ = {isa = PBXBuildFile; fileRef = 2DAFE22A2311406400DC687E /* icon80.png */; };
 		2DC7CCFD21B4C014000EC865 /* NLCallPoliceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC7CCFC21B4C014000EC865 /* NLCallPoliceViewController.m */; };
 		2DC7CD0021B4C088000EC865 /* UILabel+normal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC7CCFF21B4C088000EC865 /* UILabel+normal.m */; };
 		2DCC19B621AFDEA800B5FC92 /* NLCarLocationInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCC19B021AFDEA800B5FC92 /* NLCarLocationInfoModel.m */; };
@@ -257,6 +259,10 @@
 		2D70C82C21B12BAA001657B2 /* XMTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMTextView.m; sourceTree = "<group>"; };
 		2D7B6830230B9EF900A10339 /* my_head@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_head@3x.png"; sourceTree = "<group>"; };
 		2D7B6831230B9EF900A10339 /* my_head@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_head@2x.png"; sourceTree = "<group>"; };
+		2D958598231CE7A00056CABF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		2D95859A231CE7B50056CABF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		2D9D8B38231DEC7900FC56DD /* sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound.wav; sourceTree = "<group>"; };
+		2DAFE22A2311406400DC687E /* icon80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon80.png; sourceTree = "<group>"; };
 		2DC7CCFB21B4C014000EC865 /* NLCallPoliceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NLCallPoliceViewController.h; sourceTree = "<group>"; };
 		2DC7CCFC21B4C014000EC865 /* NLCallPoliceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NLCallPoliceViewController.m; sourceTree = "<group>"; };
 		2DC7CCFE21B4C088000EC865 /* UILabel+normal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UILabel+normal.h"; sourceTree = "<group>"; };
@@ -332,9 +338,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D958597231CC87D0056CABF /* libc++.tbd in Frameworks */,
 				2D20A9332194216E00A4E110 /* CoreMotion.framework in Frameworks */,
 				2D20A9312194216800A4E110 /* libsqlite3.0.tbd in Frameworks */,
-				2D20A92F2194215A00A4E110 /* libc++.tbd in Frameworks */,
 				2D20A92D2194214C00A4E110 /* CoreTelephony.framework in Frameworks */,
 				2D20A92B2194214600A4E110 /* Security.framework in Frameworks */,
 				2D20A9292194213C00A4E110 /* CoreGraphics.framework in Frameworks */,
@@ -376,6 +382,8 @@
 		13243282D760AE30C8400BF5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2D95859A231CE7B50056CABF /* CoreFoundation.framework */,
+				2D958598231CE7A00056CABF /* CFNetwork.framework */,
 				2D20A9322194216E00A4E110 /* CoreMotion.framework */,
 				2D20A9302194216800A4E110 /* libsqlite3.0.tbd */,
 				2D20A92E2194215A00A4E110 /* libc++.tbd */,
@@ -635,6 +643,7 @@
 		2D20A89F2194201100A4E110 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2D9D8B38231DEC7900FC56DD /* sound.wav */,
 				2D7B6831230B9EF900A10339 /* my_head@2x.png */,
 				2D7B6830230B9EF900A10339 /* my_head@3x.png */,
 				2D55A05521F805CB001EFB45 /* iconfont.ttf */,
@@ -666,6 +675,7 @@
 		2D20A8AF2194201100A4E110 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				2DAFE22A2311406400DC687E /* icon80.png */,
 				2D20A8B02194201100A4E110 /* 1024.png */,
 				2D20A8B12194201100A4E110 /* icon29@3x.png */,
 				2D20A8B22194201100A4E110 /* icon.png */,
@@ -881,12 +891,14 @@
 				2D20A9022194201200A4E110 /* mine.png in Resources */,
 				2D70C81521B0EB3B001657B2 /* CarCollectionViewCell.xib in Resources */,
 				2DCC19D421AFDEC700B5FC92 /* NLHomeNoLoginTableViewCell.xib in Resources */,
+				2DAFE22B2311406400DC687E /* icon80.png in Resources */,
 				2D20A8FE2194201200A4E110 /* ad.png in Resources */,
 				2D70C81921B120A4001657B2 /* iconPlace.png in Resources */,
 				2D20A90E2194201200A4E110 /* icon29@2x.png in Resources */,
 				2D20A9102194201200A4E110 /* icon40.png in Resources */,
 				2D20A91A2194201200A4E110 /* 1125X2436@3x.png in Resources */,
 				2D20A9072194201200A4E110 /* find.png in Resources */,
+				2D9D8B39231DEC7900FC56DD /* sound.wav in Resources */,
 				2D20A9132194201200A4E110 /* home-s.png in Resources */,
 				2D20A9162194201200A4E110 /* 640-960@2x.png in Resources */,
 				2D20A81121941E5F00A4E110 /* Assets.xcassets in Resources */,

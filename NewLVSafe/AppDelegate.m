@@ -11,7 +11,8 @@
 #import "NLLoginViewController.h"
 #import <BaiduMapAPI_Base/BMKMapManager.h>
 #import  <UserNotifications/UserNotifications.h>
-@interface AppDelegate ()<UNUserNotificationCenterDelegate>
+#import <JPUSHService.h>
+@interface AppDelegate ()<JPUSHRegisterDelegate>
 
 @end
 
@@ -44,32 +45,28 @@
         NSDictionary* pushInfo = [launchOptions objectForKey:@"UIApplicationLaunchOptionsRemoteNotificationKey"];
         if (pushInfo)
         {
+            DLog(@"%@",pushInfo);
               [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"actForPush"];
             [self showAlertWithNotiInfo:pushInfo];
         }
         
     }
     //注册推送
-    if (@available(iOS 10.0, *)) {
-        UNUserNotificationCenter * center = [UNUserNotificationCenter currentNotificationCenter];
-        [center setDelegate:self];
-        UNAuthorizationOptions type = UNAuthorizationOptionBadge|UNAuthorizationOptionSound|UNAuthorizationOptionAlert;
-        [center requestAuthorizationWithOptions:type completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            if (granted) {
-                
-                DLog(@"注册成功");
-            }else{
-                
-                DLog(@"注册失败");
-            }
-        }];
+    //Required
+    //notice: 3.0.0 及以后版本注册可以这样写，也可以继续用之前的注册方式
+    JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+    if (@available(iOS 12.0, *)) {
+        entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound|JPAuthorizationOptionProvidesAppNotificationSettings;
     } else {
-        UIUserNotificationType notificationTypes = UIUserNotificationTypeBadge | UIUserNotificationTypeSound |UIUserNotificationTypeAlert;
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:notificationTypes categories:nil];
-        [application registerUserNotificationSettings:settings];
+        entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound;
     }
-    // 注册获得device Token
-    [application registerForRemoteNotifications];
+    
+    [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    // Required
+    // init Push
+    // notice: 2.1.5 版本的 SDK 新增的注册方法，改成可上报 IDFA，如果没有使用 IDFA 直接传 nil
+    [JPUSHService setupWithOption:launchOptions appKey:@"1825b702846e54311ed11da7"   channel:@"App Store" apsForProduction:1  advertisingIdentifier:nil];
+    [JPUSHService crashLogON];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
@@ -79,9 +76,8 @@
 // 将得到的deviceToken传给后台
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
     
-    NSString *deviceTokenStr = [[[[deviceToken description] stringByReplacingOccurrencesOfString:@"<" withString:@""]stringByReplacingOccurrencesOfString:@">" withString:@""]stringByReplacingOccurrencesOfString:@" " withString:@""];
-    
-    DLog(@"deviceTokenStr:\n%@",deviceTokenStr);
+    /// Required - 注册 DeviceToken
+    [JPUSHService registerDeviceToken:deviceToken];
     
 }
 // 注册deviceToken失败
@@ -90,9 +86,17 @@
     DLog(@"error -- %@",error);
     
 }
+// iOS 12 Support
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center openSettingsForNotification:(UNNotification *)notification API_AVAILABLE(ios(10.0)){
+    if (notification && [notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
+        //从通知界面直接进入应用
+    }else{
+        //从通知设置界面进入应用
+    }
+}
 //1.iOS10以上版本的处理
 //在前台
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler API_AVAILABLE(ios(10.0)){
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler  API_AVAILABLE(ios(10.0)){
     
     // 需要执行这个方法，选择是否提醒用户，有Badge、Sound、Alert三种类型可以设置
     BOOL   soundClosed=[[[NSUserDefaults standardUserDefaults] objectForKey:@"soundClosed"] boolValue];
@@ -104,7 +108,7 @@
 //上面的这个方法，加上completionHandler(UNNotificationPresentationOptionBadge|UNNotificationPresentationOptionSound|UNNotificationPresentationOptionAlert);
 //用户即使在前台，收到推送时通知栏也会出现，有声音和角标。如果去掉应用在前台有推送时并不会收到。
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler API_AVAILABLE(ios(10.0)){
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)())completionHandler API_AVAILABLE(ios(10.0)) API_AVAILABLE(ios(10.0)){
     //这个方法是在用户点击了消息栏的通知，进入app后会来到这里。我们可以业务逻辑。比如跳转到相应的页面等。
     //处理推送过来的数据
       [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@"actForPush"];
@@ -114,9 +118,20 @@
     
 }
 //2.iOS10以下的处理
-
+//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+//
+//    // Required, iOS 7 Support
+//    [JPUSHService handleRemoteNotification:userInfo];
+//    completionHandler(UIBackgroundFetchResultNewData);
+//}
+//
+//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+//
+//    // Required, For systems with less than or equal to iOS 6
+//    [JPUSHService handleRemoteNotification:userInfo];
+//}
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary * _Nonnull)userInfo fetchCompletionHandler:(void (^ _Nonnull)(UIBackgroundFetchResult))completionHandler{
-    
+
     /*
      UIApplicationStateActive 应用程序处于前台
      UIApplicationStateBackground 应用程序在后台，用户从通知中心点击消息将程序从后台调至前台
@@ -128,9 +143,9 @@
         //应用程序在前台
         //  [self createAlertViewControllerWithPushDict:userInfo];
         [self showAlertWithNotiInfo:userInfo];
-        
+
     }else{  //其他两种情况，一种在后台程序没有被杀死，另一种是在程序已经杀死。用户点击推送的消息进入app的情况处理。
-        
+
         //  [self handlePushMessage:userInfo];
         [self showAlertWithNotiInfo:userInfo];
     }
@@ -138,7 +153,9 @@
 }
 -(void)showAlertWithNotiInfo:(NSDictionary*)userinfo{
     DLog(@"%@",userinfo);
-    NSDictionary *body=[DHHleper  dictionaryWithJsonString:userinfo[@"message"]];
+    NSDictionary *body=[DHHleper  dictionaryWithJsonString:userinfo[@"content"]];
+    if (body!=nil&&[body isKindOfClass:[NSDictionary class]]) {
+     
     NSString *state=body[@"status"];
     NSString *title,*mess;
     if (state.integerValue==3) {//预报警
@@ -188,6 +205,7 @@
     }
     
     [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    }
 }
 -(void)httprequestWithDic:(NSDictionary*)param{
        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"actForPush"];

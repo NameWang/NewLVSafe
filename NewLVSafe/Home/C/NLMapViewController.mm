@@ -403,6 +403,7 @@
     isShow=NO;
     [carBtn setTitleColor:[UIColor grayColor] forState:(UIControlStateNormal)];
     [self.homeCollectionView setHidden:YES];
+     [self resetLockBtnTitle];
     [self downLoadMapDataWithDate:[DHHleper getLocalDate]];
     self.dataIndex=1;
     [self.tableDataSoure removeAllObjects];

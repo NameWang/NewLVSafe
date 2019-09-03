@@ -26,6 +26,7 @@
     // Do any additional setup after loading the view.
     self.title=@"消息管理";
     self.view.backgroundColor=kBGWhiteColor;
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     [self addLeftItemWithImageName:@"leftbackicon_white_titlebar_24x24_@2x"];
     UIBarButtonItem *rightBtn=[[UIBarButtonItem alloc] initWithTitle:@"清空消息" style:(UIBarButtonItemStylePlain) target:self action:@selector(cleanMessage)];
     [rightBtn setTitleTextAttributes:@{  //1.设置字体样式:例如黑体,和字体大小
@@ -240,7 +241,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (dataSource.count>0) {
         NLMessageModel *model=dataSource[indexPath.row];
-        CGFloat height=[DHHleper textHeightFromTextString:model.content width:kScreenWidth-65 fontSize:15];
+        CGFloat height=[DHHleper textHeightFromTextString:[NSString stringWithFormat:@"%@车牌号:%@型号:%@颜色:%@",model.content,model.licensenum,model.type,model.color] width:kScreenWidth-65 fontSize:15];
         return height+35;
     }else{
         return 60;

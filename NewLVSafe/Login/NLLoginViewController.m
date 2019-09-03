@@ -10,7 +10,7 @@
 #import "NLMapViewController.h"
 #import "NLRegistOrForgetViewController.h"
 #import <SafariServices/SafariServices.h>
-
+#import <JPUSHService.h>
 @interface NLLoginViewController ()<UITextFieldDelegate,SFSafariViewControllerDelegate>
 {
     UIScrollView *bgScrollView;
@@ -19,6 +19,7 @@
     UITextField *numField;
     UITextField *psdField;
     UIButton *loginBtn,*forgetBtn,*privateBtn;
+    NSString *regisID;
 }
 @end
 
@@ -121,6 +122,10 @@
     //设置成NO表示当前控件响应后会传播到其他控件上，默认为YES。
     tapGestureRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    [JPUSHService registrationIDCompletionHandler:^(int resCode, NSString *registrationID) {
+           DLog(@"resCode : %d,registrationID: %@",resCode,registrationID);
+        self->regisID=registrationID;
+    }];
 }
 #pragma mark 隐私政策相关
 -(void)privateURLClick{
@@ -232,11 +237,8 @@
         [MBProgressHUD showMessag:@"登录中···" toView:self.view];
         AFHTTPSessionManager *manager=[AFHTTPSessionManager manager];
         manager.responseSerializer=[AFHTTPResponseSerializer serializer];
-        NSString *token=[[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
-        if ([token isKindOfClass:[NSNull class]]||token==nil) {
-            token=@"";
-        }
-        NSDictionary *param=@{@"phone":numField.text,@"password":[DHHleper md5String:psdField.text],@"token":token};
+     
+        NSDictionary *param=@{@"phone":numField.text,@"password":[DHHleper md5String:psdField.text],@"token":regisID};
         [manager POST:kLoginURL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (responseObject) {
                 NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];
