@@ -219,6 +219,7 @@
         //        *  405 手机验证码输入错误
         //        *  200 成功
         NSDictionary *info1=@{@"code":checkField.text,@"password":[DHHleper md5String:pwdField.text],@"phone":numField.text};
+         DLog(@"%@",info1);
         [manager POST:kFindPWDURL parameters:info1 progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (responseObject) {
                 

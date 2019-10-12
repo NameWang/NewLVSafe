@@ -116,6 +116,7 @@
         //        password 密码
         //        newPwd 新密码
         NSDictionary *info1=@{@"phone":userInfo[@"phone"],@"password":[DHHleper md5String:numField.text],@"newPwd":[DHHleper md5String:confirmField.text],@"usertype":@"2"};
+        DLog(@"%@",info1);
         [manager POST:kChangePWDURL parameters:info1 progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (responseObject) {
                 NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:nil];

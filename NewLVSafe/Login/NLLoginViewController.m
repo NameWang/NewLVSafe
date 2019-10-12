@@ -239,6 +239,7 @@
         manager.responseSerializer=[AFHTTPResponseSerializer serializer];
      
         NSDictionary *param=@{@"phone":numField.text,@"password":[DHHleper md5String:psdField.text],@"token":regisID};
+         DLog(@"%@",param);
         [manager POST:kLoginURL parameters:param progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             if (responseObject) {
                 NSDictionary *resInfo=[NSJSONSerialization JSONObjectWithData:responseObject options:(NSJSONReadingMutableContainers) error:nil];

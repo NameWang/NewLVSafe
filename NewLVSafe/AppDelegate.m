@@ -70,6 +70,10 @@
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    //暂不适配黑暗模式
+    if (@available(iOS 13.0, *)) {
+        [UIApplication sharedApplication].keyWindow.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    }
     return YES;
 }
 

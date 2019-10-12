@@ -22,7 +22,7 @@
     self.titLabel.text=model.title;
     self.timeLabel.adjustsFontSizeToFitWidth=YES;
     self.timeLabel.text=model.pushtime;
-    self.bodyLabel.text=[NSString stringWithFormat:@"%@车牌号:%@型号:%@颜色:%@",model.content,model.licensenum,model.type,model.color];
+    self.bodyLabel.text=[NSString stringWithFormat:@"%@。车牌号:%@型号:%@颜色:%@",model.content,model.licensenum,model.type,model.color];
     self.bodyLabel.numberOfLines=0;
     CGFloat height=[DHHleper textHeightFromTextString: self.bodyLabel.text width:kScreenWidth-65 fontSize:15];
     CGRect frame0=self.bodyLabel.frame;

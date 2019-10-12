@@ -241,7 +241,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (dataSource.count>0) {
         NLMessageModel *model=dataSource[indexPath.row];
-        CGFloat height=[DHHleper textHeightFromTextString:[NSString stringWithFormat:@"%@车牌号:%@型号:%@颜色:%@",model.content,model.licensenum,model.type,model.color] width:kScreenWidth-65 fontSize:15];
+        CGFloat height=[DHHleper textHeightFromTextString:[NSString stringWithFormat:@"%@。车牌号:%@型号:%@颜色:%@",model.content,model.licensenum,model.type,model.color] width:kScreenWidth-65 fontSize:15];
         return height+35;
     }else{
         return 60;

@@ -1204,7 +1204,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/NewLVSafe/PSTools/BaiduMap_IOSSDK_Lib",
 				);
-				GCC_PREFIX_HEADER = "/Users/hexinxiao/Desktop/NewLVSafe/NewLVSafe/peoplesafe-Prefix.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/NewLVSafe/peoplesafe-Prefix.pch";
 				INFOPLIST_FILE = NewLVSafe/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1233,7 +1233,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/NewLVSafe/PSTools/BaiduMap_IOSSDK_Lib",
 				);
-				GCC_PREFIX_HEADER = "/Users/hexinxiao/Desktop/NewLVSafe/NewLVSafe/peoplesafe-Prefix.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/NewLVSafe/peoplesafe-Prefix.pch";
 				INFOPLIST_FILE = NewLVSafe/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
